@@ -1,5 +1,6 @@
 const THREE = require('three');
 const sceneUtility = require('./sceneUtility');
+const socketUtility = require('./socketUtility');
 
 const init = function init() {
   // camera setup
@@ -50,7 +51,11 @@ const init = function init() {
   return { camera, renderer, scene };
 };
 
-const game = init();
-sceneUtility.addLookControls(game.camera);
-sceneUtility.addMoveControls(game.camera);
-sceneUtility.animate(game);
+const startGame = function startGame(roomNumber) {
+  const game = init();
+  sceneUtility.addLookControls(game.camera);
+  sceneUtility.addMoveControls(game.camera);
+  sceneUtility.animate(game);
+};
+
+module.exports = { startGame };

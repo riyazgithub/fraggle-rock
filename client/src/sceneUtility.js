@@ -65,6 +65,13 @@ module.exports = {
       if (moveForward) {
         camera.position.x -= movePerTick * Math.sin(thetaY);
         camera.position.z += movePerTick * (-Math.cos(thetaY));
+      } else if(moveBackward) {
+        camera.position.x += movePerTick * Math.sin(thetaY);
+        camera.position.z -= movePerTick * (-Math.cos(thetaY))
+      } else if(moveLeft) {
+        camera.position.x += movePerTick * (-Math.cos(thetaY));
+      } else if(moveRight) {
+        camera.position.x -= movePerTick * (-Math.cos(thetaY));
       }
     }, 10);
 

@@ -16,7 +16,7 @@
   - (cleanup) ...
   - (test) ...
   - (doc) ...
-1. When you've finished with your fix or feature, Rebase upstream changes into your branch. submit a [pull request][]
+1. When you've finished with your fix or feature, Pull upstream changes into your branch. submit a [pull request][]
    directly to master. Include a description of your changes.
 1. Your pull request will be reviewed by another maintainer. The point of code
    reviews is to help keep the codebase clean and of high quality and, equally
@@ -53,7 +53,7 @@ These commands will help you do this:
 git checkout -b `your-branch-name`
 ```
 
-### Make commits to your feature branch. 
+### Make commits to your feature branch.
 
 Prefix each commit like so
   - (feat) Added a new feature
@@ -79,18 +79,18 @@ changes.
   be a blank line and then a more detailed description of the commit. This can be
   as detailed as you want, so dig into details here and keep the first line short.
 
-### Rebase upstream changes into your branch
+### Pull upstream changes into your branch
 
 Once you are done making changes, you can begin the process of getting
-your code merged into the main repo. Step 1 is to rebase upstream
+your code merged into the main repo. Step 1 is to pull upstream
 changes to the master branch into yours by running this command
 from your branch:
 
 ```bash
-git pull --rebase upstream master
+git pull upstream master
 ```
 
-This will start the rebase process. You must commit all of your changes
+This will start the pull process. You must commit all of your changes
 before doing this. If there are no conflicts, this should just roll all
 of your changes back on top of the changes from upstream, leading to a
 nice, clean, linear commit history.
@@ -103,14 +103,8 @@ and picking the versions you want. Be aware that these changes will show
 up in your pull request, so try and incorporate upstream changes as much
 as possible.
 
-You pick a file by `git add`ing it - you do not make commits during a
-rebase.
 
 Once you are done fixing conflicts for a specific commit, run:
-
-```bash
-git rebase --continue
-```
 
 This will continue the rebasing process. Once you are done fixing all
 conflicts you should run the existing tests to make sure you didn’t break
@@ -157,7 +151,7 @@ This is just to help you organize your process
 - [ ] Did I follow the correct naming convention for my branch?
 - [ ] Is my branch focused on a single main change?
  - [ ] Do all of my changes directly relate to this change?
-- [ ] Did I rebase the upstream master branch after I finished all my
+- [ ] Did I pull the upstream master branch after I finished all my
   work?
 - [ ] Did I write a clear pull request message detailing what changes I made?
 - [ ] Did I get a code review?

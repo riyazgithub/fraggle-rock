@@ -1,0 +1,41 @@
+{
+  "name": "fraggle-rock",
+  "version": "1.0.0",
+  "description": "3D Shooter came (Tactical)",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm run test:server",
+    "test:server": "ls"
+
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/riyazgithub/fraggle-rock.git"
+  },
+  "keywords": [
+    "game"
+  ],
+  "author": "Nick, Will, Eric, Riyaz",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/riyazgithub/fraggle-rock/issues"
+  },
+  "dependencies": {
+    "node-static": "*",
+    "react": "*",
+    "webpack": "*"
+  },
+  "homepage": "https://github.com/riyazgithub/fraggle-rock#readme",
+  "devDependencies": {
+   "babel-eslint": "^7.0.0",
+   "babel-jest": "16.0.0",
+   "babel-preset-react-native": "1.9.0",
+   "eslint": "^3.9.0",
+   "eslint-config-hackreactor": "git://github.com/reactorcore/eslint-config-hackreactor",
+   "eslint-plugin-import": "^2.1.0",
+   "eslint-plugin-jsx-a11y": "^2.2.3",
+   "eslint-plugin-react": "^6.5.0",
+   "eslint-plugin-react-native": "^2.0.0",
+   "node-fetch": "^1.6.3"
+ }
+}

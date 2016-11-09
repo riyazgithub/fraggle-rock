@@ -6,7 +6,6 @@
   "scripts": {
     "test": "npm run test:server",
     "test:server": "ls"
-
   },
   "repository": {
     "type": "git",
@@ -21,21 +20,26 @@
     "url": "https://github.com/riyazgithub/fraggle-rock/issues"
   },
   "dependencies": {
+    "body-parser": "^1.15.2",
+    "compression": "^1.6.2",
+    "eslint-config-airbnb": "^13.0.0",
+    "express": "^4.14.0",
+    "morgan": "^1.7.0",
     "node-static": "*",
     "react": "*",
     "webpack": "*"
   },
   "homepage": "https://github.com/riyazgithub/fraggle-rock#readme",
   "devDependencies": {
-   "babel-eslint": "^7.0.0",
-   "babel-jest": "16.0.0",
-   "babel-preset-react-native": "1.9.0",
-   "eslint": "^3.9.0",
-   "eslint-config-hackreactor": "git://github.com/reactorcore/eslint-config-hackreactor",
-   "eslint-plugin-import": "^2.1.0",
-   "eslint-plugin-jsx-a11y": "^2.2.3",
-   "eslint-plugin-react": "^6.5.0",
-   "eslint-plugin-react-native": "^2.0.0",
-   "node-fetch": "^1.6.3"
- }
+    "babel-eslint": "^7.0.0",
+    "babel-jest": "16.0.0",
+    "babel-preset-react-native": "1.9.0",
+    "eslint": "^3.9.0",
+    "eslint-config-hackreactor": "git://github.com/reactorcore/eslint-config-hackreactor",
+    "eslint-plugin-import": "^2.1.0",
+    "eslint-plugin-jsx-a11y": "^2.2.3",
+    "eslint-plugin-react": "^6.5.0",
+    "eslint-plugin-react-native": "^2.0.0",
+    "node-fetch": "^1.6.3"
+  }
 }

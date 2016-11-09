@@ -1,3 +1,7 @@
+const THREE = require('three');
+const remoteClients = {};
+let currentGame;
+
 module.exports = {
   addLookControls: function addLookControls(camera) {
     const onMouseMove = function onMouseMove(event) {
@@ -10,7 +14,7 @@ module.exports = {
       camera.rotation.z -= movementY * 0.002 * Math.sin(thetaY);
     };
 
-   document.addEventListener( 'mousemove', onMouseMove, false );
+   document.addEventListener('mousemove', onMouseMove, false);
   },
   addMoveControls: function addMoveControls(camera) {
     let moveForward;
@@ -80,7 +84,29 @@ module.exports = {
     return updateCamera;
   },
   animate: function animate(game) {
+    currentGame = game;
     game.renderer.render(game.scene, game.camera);
     requestAnimationFrame(animate.bind(null, game));
   },
+  loadClientUpdate: function loadClientUpdate(clientPosition) {
+    if (currentGame.camera.uuid !== clientPosition.uuid) {
+      let oldShape = remoteClients[clientPosition.uuid];
+      if (oldShape) {
+        currentGame.scene.remove(oldShape);
+        delete remoteClients[clientPosition.uuid];
+      }
+      // Green Square
+      let geometry = new THREE.BoxGeometry(1, 1, 1);
+      let material = new THREE.MeshBasicMaterial({ color: clientPosition.color });
+      let mesh = new THREE.Mesh(geometry, material);
+      mesh.position.x = clientPosition.x;
+      mesh.position.y = clientPosition.y;
+      mesh.position.z = clientPosition.z;
+      mesh.rotation.x = clientPosition.rx;
+      mesh.rotation.y = clientPosition.ry;
+      mesh.rotation.z = clientPosition.rz;
+      currentGame.scene.add(mesh);
+      remoteClients[clientPosition.uuid] = mesh;
+    }
+  }
 };

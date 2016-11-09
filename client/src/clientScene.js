@@ -51,11 +51,12 @@ const init = function init() {
   return { camera, renderer, scene };
 };
 
-const startGame = function startGame(roomNumber) {
+const startGame = function startGame(matchNumber) {
   const game = init();
   sceneUtility.addLookControls(game.camera);
   sceneUtility.addMoveControls(game.camera);
   sceneUtility.animate(game);
+  socketUtility.requestNewMatch(matchNumber);
 };
 
 module.exports = { startGame };

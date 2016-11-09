@@ -2,6 +2,8 @@ const express = require('express');
 const path = require('path');
 
 const app = express();
+const server = require('http').Server(app);
+const io = require('socket.io')(server);
 const morgan = require('morgan'); // middleware for logging request details
 const bodyParser = require('body-parser'); // middleware supports unicode encoding of the body
 const compression = require('compression'); // middleware for gzip compression
@@ -20,9 +22,12 @@ app.use(compression());
 
 app.use(express.static(path.join(__dirname, './../client')));
 
-app.listen(process.env.PORT || 9999, () => {
+server.listen(process.env.PORT || 9999, () => {
   console.log(`listening on port ${process.env.PORT || 9999}`);
 });
 
+io.on('connection', (socket) => {
+  console.log('client attached');
+});
 
 module.exports = app;

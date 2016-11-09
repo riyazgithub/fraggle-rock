@@ -4,8 +4,8 @@
   "description": "3D Shooter came (Tactical)",
   "main": "index.js",
   "scripts": {
-    "test": "npm run tests",
-    "tests": ""
+    "test": "npm run test:server",
+    "test:server": "ls"
 
   },
   "repository": {
@@ -21,7 +21,9 @@
     "url": "https://github.com/riyazgithub/fraggle-rock/issues"
   },
   "dependencies": {
-  "react": "15.3.2"
+    "node-static": "*",
+    "react": "^15.3.2",
+    "webpack": "^1.12.9"
   },
   "homepage": "https://github.com/riyazgithub/fraggle-rock#readme",
   "devDependencies": {

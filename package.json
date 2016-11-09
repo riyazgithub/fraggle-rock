@@ -4,7 +4,9 @@
   "description": "3D Shooter came (Tactical)",
   "main": "index.js",
   "scripts": {
-    "test": "npm run test"
+    "test": "npm run tests",
+    "tests": ""
+
   },
   "repository": {
     "type": "git",

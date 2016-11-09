@@ -58,13 +58,22 @@ const startUpdateTick = function startUpdateTick(camera) {
   }, 250);
 };
 
-const startGame = function startGame(matchNumber) {
+const startGame = function startGame() {
   const game = init();
   sceneUtility.addLookControls(game.camera);
   sceneUtility.addMoveControls(game.camera);
   sceneUtility.animate(game);
-  socketUtility.requestNewMatch(matchNumber);
+  socketUtility.requestNewMatch();
   startUpdateTick(game.camera);
 };
 
-module.exports = { startGame };
+const joinGame = function joinGame(matchNumber) {
+  const game = init();
+  sceneUtility.addLookControls(game.camera);
+  sceneUtility.addMoveControls(game.camera);
+  sceneUtility.animate(game);
+  socketUtility.joinMatch(matchNumber);
+  startUpdateTick(game.camera);
+};
+
+module.exports = { startGame, joinGame };

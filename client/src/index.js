@@ -1,6 +1,11 @@
 const clientScene = require('./clientScene.js');
 
 document.querySelector('#joinMatch').addEventListener('click', function() {
-  clientScene.startGame(1);
-  document.querySelector('#joinMatch').remove();
+  clientScene.startGame();
+  document.querySelector('#testButtons').remove();
+});
+
+document.querySelector('#joinExisting').addEventListener('click', function() {
+  clientScene.joinGame(0);
+  document.querySelector('#testButtons').remove();
 });

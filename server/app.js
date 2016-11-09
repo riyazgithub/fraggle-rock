@@ -37,10 +37,15 @@ io.on('connection', (socket) => {
     });
   });
 
-  // socket.on('addMeToMatch', function (matchId) {
-  //   const match = matchController.getMatch(matchId);
-    // io.to(data).emit('renderAll', match);
-  // });
+  socket.on('addMeToMatch', function (matchId) {
+    const match = matchController.getMatch(matchId);
+    socket.join(match.guid);
+    socket.on('clientUpdate', function (clientPosition) {
+      io.to(match.guid).emit('clientUpdate', clientPosition);
+      match.loadClientUpdate(clientPosition);
+    });
+    io.to(match.guid).emit('initMatch', match);
+  });
 });
 
 module.exports = app;

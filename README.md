@@ -4,9 +4,9 @@
 
 ## Team
 
-  - __Product Owner__: teamMember
+  - __Product Owner__: Eric Eakin
   - __Scrum Master__: teamMember
-  - __Development Team Members__: teamMember, teamMember
+  - __Development Team Members__: Will Stockman, Nick Lathen, Riyaz Ahmed
 
 ## Table of Contents
 
@@ -37,9 +37,7 @@
 From within the root directory:
 
 ```sh
-sudo npm install -g bower
 npm install
-bower install
 ```
 
 ### Roadmap

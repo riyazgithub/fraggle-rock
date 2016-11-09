@@ -18,5 +18,20 @@
   "bugs": {
     "url": "https://github.com/riyazgithub/fraggle-rock/issues"
   },
-  "homepage": "https://github.com/riyazgithub/fraggle-rock#readme"
+  "dependencies": {
+  "react": "15.3.2"
+  },
+  "homepage": "https://github.com/riyazgithub/fraggle-rock#readme",
+  "devDependencies": {
+   "babel-eslint": "^7.1.0",
+   "babel-jest": "16.0.0",
+   "babel-preset-react-native": "1.9.0",
+   "eslint": "^3.9.1",
+   "eslint-config-hackreactor": "git://github.com/reactorcore/eslint-config-hackreactor",
+   "eslint-plugin-import": "^2.1.0",
+   "eslint-plugin-jsx-a11y": "^2.2.3",
+   "eslint-plugin-react": "^6.5.0",
+   "eslint-plugin-react-native": "^2.0.0",
+   "node-fetch": "^1.6.3"
+ }
 }

@@ -1,12 +1,12 @@
 const express = require('express');
 const path = require('path');
-
 const app = express();
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
 const morgan = require('morgan'); // middleware for logging request details
 const bodyParser = require('body-parser'); // middleware supports unicode encoding of the body
 const compression = require('compression'); // middleware for gzip compression
+const matchController = require('./controllers/matchController.js');
 
 const allowCrossDomain = (req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
@@ -27,7 +27,15 @@ server.listen(process.env.PORT || 9999, () => {
 });
 
 io.on('connection', (socket) => {
-  console.log('client attached');
+  socket.on('addMeToMatch', function (data) {
+    // const match = matchController.getMatch(data);
+    socket.join(data);
+    // io.to(data).emit('renderAll', match.state);
+    socket.on('clientUpdate', function (data) {
+      console.log(data);
+      // match.loadClientUpdate(data);
+    });
+  });
 });
 
 module.exports = app;

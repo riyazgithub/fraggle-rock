@@ -1,6 +1,7 @@
 const THREE = require('three');
 const sceneUtility = require('./sceneUtility');
 const socketUtility = require('./socketUtility');
+let serverUpdateTick;
 
 const init = function init() {
   // camera setup
@@ -51,12 +52,19 @@ const init = function init() {
   return { camera, renderer, scene };
 };
 
+const startUpdateTick = function startUpdateTick(camera) {
+  serverUpdateTick = setInterval(() => {
+    socketUtility.emitClientPosition(camera);
+  }, 250);
+};
+
 const startGame = function startGame(matchNumber) {
   const game = init();
   sceneUtility.addLookControls(game.camera);
   sceneUtility.addMoveControls(game.camera);
   sceneUtility.animate(game);
   socketUtility.requestNewMatch(matchNumber);
+  startUpdateTick(game.camera);
 };
 
 module.exports = { startGame };

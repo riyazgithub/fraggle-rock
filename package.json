@@ -22,8 +22,8 @@
   },
   "dependencies": {
     "node-static": "*",
-    "react": "^15.3.2",
-    "webpack": "^1.12.9"
+    "react": "*",
+    "webpack": "*"
   },
   "homepage": "https://github.com/riyazgithub/fraggle-rock#readme",
   "devDependencies": {

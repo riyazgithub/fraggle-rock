@@ -21,6 +21,11 @@
   },
   "dependencies": {
     "cannon": "^0.6.2",
+    "body-parser": "^1.15.2",
+    "compression": "^1.6.2",
+    "eslint-config-airbnb": "^13.0.0",
+    "express": "^4.14.0",
+    "morgan": "^1.7.0",
     "node-static": "*",
     "react": "*",
     "three": "^0.82.1",

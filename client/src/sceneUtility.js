@@ -102,6 +102,9 @@ module.exports = {
       mesh.position.x = clientPosition.x;
       mesh.position.y = clientPosition.y;
       mesh.position.z = clientPosition.z;
+      mesh.rotation.x = clientPosition.rx;
+      mesh.rotation.y = clientPosition.ry;
+      mesh.rotation.z = clientPosition.rz;
       currentGame.scene.add(mesh);
       remoteClients[clientPosition.uuid] = mesh;
     }

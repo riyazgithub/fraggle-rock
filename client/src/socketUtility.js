@@ -31,6 +31,9 @@ module.exports = {
     clientPosition.x = camera.position.x;
     clientPosition.y = camera.position.y;
     clientPosition.z = camera.position.z;
+    clientPosition.rx = camera.rotation.x;
+    clientPosition.ry = camera.rotation.y;
+    clientPosition.rz = camera.rotation.z;
     clientPosition.color = 'red';
     clientPosition.uuid = camera.uuid;
 

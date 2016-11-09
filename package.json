@@ -1,0 +1,22 @@
+{
+  "name": "fraggle-rock",
+  "version": "1.0.0",
+  "description": "3D Shooter came (Tactical)",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm run test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/riyazgithub/fraggle-rock.git"
+  },
+  "keywords": [
+    "game"
+  ],
+  "author": "Nick, Will, Eric, Riyaz",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/riyazgithub/fraggle-rock/issues"
+  },
+  "homepage": "https://github.com/riyazgithub/fraggle-rock#readme"
+}

@@ -1,8 +1,10 @@
 let socket;
+const sceneUtility = require('./sceneUtility');
 
 const addClientUpdateListener = function addClientUpdateListener(socket) {
   socket.on('clientUpdate', function (clientPosition) {
     console.log(clientPosition);
+    sceneUtility.loadClientUpdate(clientPosition);
   });
 };
 
@@ -30,7 +32,7 @@ module.exports = {
     clientPosition.y = camera.position.y;
     clientPosition.z = camera.position.z;
     clientPosition.color = 'red';
-    clientPosition.guid = camera.uuid;
+    clientPosition.uuid = camera.uuid;
 
     socket.emit('clientUpdate', clientPosition);
   },

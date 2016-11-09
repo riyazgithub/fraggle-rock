@@ -55,7 +55,7 @@ const init = function init() {
 const startUpdateTick = function startUpdateTick(camera) {
   serverUpdateTick = setInterval(() => {
     socketUtility.emitClientPosition(camera);
-  }, 250);
+  }, 30);
 };
 
 const startGame = function startGame() {

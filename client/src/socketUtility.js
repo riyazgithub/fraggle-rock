@@ -1,9 +1,16 @@
 let socket;
 
+const addClientUpdateListener = function addClientUpdateListener(socket) {
+  socket.on('clientUpdate', function (clientPosition) {
+    console.log(clientPosition);
+  });
+};
+
 module.exports = {
-  requestNewMatch: function requestNewMatch(matchNumber) {
+  requestNewMatch: function requestNewMatch() {
     socket = io();
-    socket.emit('addMeToMatch', matchNumber);
+    socket.emit('addMeToNewMatch', null);
+    addClientUpdateListener(socket);    
   },
   emitClientPosition: function emitClientPositon(camera) {
     const clientPosition = {};
@@ -11,7 +18,7 @@ module.exports = {
     clientPosition.y = camera.position.y;
     clientPosition.z = camera.position.z;
     clientPosition.color = 'red';
-    clientPosition.uuid = camera.uuid;
+    clientPosition.guid = camera.uuid;
 
     socket.emit('clientUpdate', clientPosition);
   },

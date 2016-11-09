@@ -10,7 +10,7 @@ module.exports = {
       camera.rotation.z -= movementY * 0.002 * Math.sin(thetaY);
     };
 
-   document.addEventListener( 'mousemove', onMouseMove, false );
+   document.addEventListener('mousemove', onMouseMove, false);
   },
   addMoveControls: function addMoveControls(camera) {
     let moveForward;

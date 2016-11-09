@@ -27,15 +27,20 @@ server.listen(process.env.PORT || 9999, () => {
 });
 
 io.on('connection', (socket) => {
-  socket.on('addMeToMatch', function (data) {
-    // const match = matchController.getMatch(data);
-    socket.join(data);
-    // io.to(data).emit('renderAll', match.state);
-    socket.on('clientUpdate', function (data) {
-      console.log(data);
-      // match.loadClientUpdate(data);
+
+  socket.on('addMeToNewMatch', function () {
+    const match = matchController.getNewMatch();
+    socket.join(match.guid);
+    socket.on('clientUpdate', function (clientPosition) {
+      io.to(match.guid).emit('clientUpdate', clientPosition);
+      match.loadClientUpdate(clientPosition);
     });
   });
+
+  // socket.on('addMeToMatch', function (matchId) {
+  //   const match = matchController.getMatch(matchId);
+    // io.to(data).emit('renderAll', match);
+  // });
 });
 
 module.exports = app;

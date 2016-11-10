@@ -3,6 +3,7 @@ const remoteClients = {};
 let currentGame;
 let pitch = 0;
 let yaw = 0;
+let ballMeshes = [];
 
 module.exports = {
   addLookControls: function addLookControls(camera) {
@@ -90,6 +91,37 @@ module.exports = {
     document.addEventListener('keydown', onKeyDown, false);
     document.addEventListener('keyup', onKeyUp, false);
     return updateCamera;
+  },
+  addClickControls: function addClickControls() {
+    window.addEventListener("click",function(e){
+      let x = currentGame.camera.position.x;
+      let y = currentGame.camera.position.y;
+      let z = currentGame.camera.position.z;
+      // const ballBody = new CANNON.Body({ mass: 1 });
+      // ballBody.addShape(ballShape);
+      const geometry = new THREE.SphereGeometry( .5, 32, 32 );
+      const material = new THREE.MeshBasicMaterial( {color: 'red'} );
+      const ballMesh = new THREE.Mesh( geometry, material );
+
+      // world.add(ballBody);
+      currentGame.scene.add(ballMesh);
+      // ballMesh.castShadow = true;
+      // ballMesh.receiveShadow = true;
+      // balls.push(ballBody);
+      ballMeshes.push(ballMesh);
+      // getShootDir(shootDirection);
+      // ballBody.velocity.set(  shootDirection.x * shootVelo,
+                              // shootDirection.y * shootVelo,
+                              // shootDirection.z * shootVelo);
+
+      // Move the ball outside the player sphere
+      const shootDirection = currentGame.camera.getWorldDirection();
+      x += shootDirection.x * 2;
+      y += shootDirection.y * 2;
+      z += shootDirection.z * 2;
+      // ballBody.position.set(x,y,z);
+      ballMesh.position.set(x,y,z);
+    });
   },
   animate: function animate(game) {
     currentGame = game;

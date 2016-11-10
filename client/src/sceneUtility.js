@@ -69,22 +69,21 @@ module.exports = {
       }
     };
     const updateCamera = setInterval(function() {
-      const thetaX = camera.rotation.x;
-      const thetaY = camera.rotation.y;
-      const thetaZ = camera.rotation.z;
+      const direction = camera.getWorldDirection();
+      let thetaY = Math.PI/2 - Math.atan2(direction.z, direction.x);
       const movePerTick = 0.1;
       if (moveForward) {
-        camera.position.x -= movePerTick * Math.sin(thetaY);
-        camera.position.z += movePerTick * (-Math.cos(thetaY));
-      } else if(moveBackward) {
         camera.position.x += movePerTick * Math.sin(thetaY);
-        camera.position.z -= movePerTick * (-Math.cos(thetaY))
+        camera.position.z -= movePerTick * (-Math.cos(thetaY));
+      } else if(moveBackward) {
+        camera.position.x -= movePerTick * Math.sin(thetaY);
+        camera.position.z += movePerTick * (-Math.cos(thetaY))
       } else if(moveLeft) {
-        camera.position.x += movePerTick * (-Math.cos(thetaY));
-        camera.position.z -= movePerTick * (-Math.sin(thetaY));
-      } else if(moveRight) {
         camera.position.x -= movePerTick * (-Math.cos(thetaY));
         camera.position.z += movePerTick * (-Math.sin(thetaY));
+      } else if(moveRight) {
+        camera.position.x += movePerTick * (-Math.cos(thetaY));
+        camera.position.z -= movePerTick * (-Math.sin(thetaY));
       }
     }, 10);
 

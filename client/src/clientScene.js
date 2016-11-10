@@ -1,70 +1,34 @@
-const THREE = require('three');
 const sceneUtility = require('./sceneUtility');
 const socketUtility = require('./socketUtility');
+const levelBuilder = require('./levelBuilder');
+const rendererBuilder = require('./rendererBuilder');
+const cameraBuilder = require('./cameraBuilder');
 let serverUpdateTick;
+const serverUpdateInterval = 30;
 
 const init = function init() {
-  // camera setup
-  const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000); // (fov, aspect, near, far)
-  camera.position.y = 2;
-  const scene = new THREE.Scene();
+  const camera = cameraBuilder.buildCamera();
+  const scene = levelBuilder.buildLevelOne();
+  const renderer = rendererBuilder.buildRenderer();
 
-  // Ambient Light
-  scene.add(new THREE.AmbientLight(0x111111));
-
-  // Green Square
-  let geometry = new THREE.BoxGeometry(1, 1, 1);
-  let material = new THREE.MeshBasicMaterial({ color: 'green' });
-  let mesh = new THREE.Mesh(geometry, material);
-  mesh.position.x = 5;
-  scene.add(mesh);
-
-  // Red Square
-  material = new THREE.MeshBasicMaterial({ color: 'red' });
-  mesh = new THREE.Mesh(geometry, material);
-  mesh.position.z = -5;
-  scene.add(mesh);
-
-  // Blue Square
-  material = new THREE.MeshBasicMaterial({ color: 'blue' });
-  mesh = new THREE.Mesh(geometry, material);
-  mesh.position.z = 5;
-  scene.add(mesh);
-
-  // Yellow Square
-  material = new THREE.MeshBasicMaterial({ color: 'yellow' });
-  mesh = new THREE.Mesh(geometry, material);
-  mesh.position.x = -5;
-  scene.add(mesh);
-
-  // FLOOR
-  geometry = new THREE.BoxGeometry(100, 0.1, 100);
-  material = new THREE.MeshBasicMaterial({ color: 'white' });
-  mesh = new THREE.Mesh(geometry, material);
-  scene.add(mesh);
-
-
-  // Renderer setup
-  const renderer = new THREE.WebGLRenderer({ antialias: true });
-  renderer.setSize(window.innerWidth, window.innerHeight);
   document.querySelector('body').appendChild(renderer.domElement);
-  renderer.render(scene, camera);
+  document.body.requestPointerLock()
   return { camera, renderer, scene };
 };
 
 const startUpdateTick = function startUpdateTick(camera) {
   serverUpdateTick = setInterval(() => {
     socketUtility.emitClientPosition(camera);
-  }, 30);
+  }, serverUpdateInterval);
 };
 
 const startGame = function startGame() {
-  const game = init();
+  const game = init(); //creates camera, renderer and scene data
   sceneUtility.addLookControls(game.camera);
   sceneUtility.addMoveControls(game.camera);
-  sceneUtility.animate(game);
-  socketUtility.requestNewMatch();
-  startUpdateTick(game.camera);
+  sceneUtility.animate(game); //Renders screen to page and requests re-render at next animation frame
+  socketUtility.requestNewMatch(); //Request to the server to create a new match
+  startUpdateTick(game.camera); //This starts an interval to emit player position to server on timer
 };
 
 const joinGame = function joinGame(matchNumber) {

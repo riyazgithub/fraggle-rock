@@ -31,9 +31,9 @@ io.on('connection', (socket) => {
   socket.on('addMeToNewMatch', function () {
     const match = matchController.getNewMatch();
     socket.join(match.guid);
-    socket.on('clientUpdate', function (clientPosition) {
-      io.to(match.guid).emit('clientUpdate', clientPosition);
-      match.loadClientUpdate(clientPosition);
+    socket.on('clientUpdate', function (clientPosition) { // listener for client position updates
+      io.to(match.guid).emit('clientUpdate', clientPosition); // re-emit to other clients
+      match.loadClientUpdate(clientPosition); // update server's copy of client position
     });
   });
 
@@ -44,7 +44,7 @@ io.on('connection', (socket) => {
       io.to(match.guid).emit('clientUpdate', clientPosition);
       match.loadClientUpdate(clientPosition);
     });
-    io.to(match.guid).emit('initMatch', match);
+    io.to(match.guid).emit('initMatch', match); // emit full match to new client to get them up to date
   });
 });
 

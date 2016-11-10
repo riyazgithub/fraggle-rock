@@ -12,7 +12,7 @@ const init = function init() {
   const renderer = rendererBuilder.buildRenderer();
 
   document.querySelector('body').appendChild(renderer.domElement);
-
+  document.body.requestPointerLock()
   return { camera, renderer, scene };
 };
 

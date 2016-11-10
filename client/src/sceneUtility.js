@@ -1,17 +1,24 @@
 const THREE = require('three');
 const remoteClients = {};
 let currentGame;
+let pitch = 0;
+let yaw = 0;
 
 module.exports = {
   addLookControls: function addLookControls(camera) {
     const onMouseMove = function onMouseMove(event) {
       const movementX = event.movementX;
       const movementY = event.movementY;
-      const thetaY = camera.rotation.y;
       // TODO - FIX THIS
-      camera.rotation.y -= movementX * 0.002;
-      camera.rotation.x -= movementY * 0.002 * Math.cos(thetaY);
-      camera.rotation.z -= movementY * 0.002 * Math.sin(thetaY);
+      yaw -= movementX * 0.002;
+      pitch -= movementY * 0.002;
+
+      let yawQuat = new THREE.Quaternion();
+      let pitchQuat = new THREE.Quaternion();
+      yawQuat.setFromAxisAngle(new THREE.Vector3( 0, 1, 0 ), yaw);
+      pitchQuat.setFromAxisAngle(new THREE.Vector3(1,0,0), pitch);
+      let quat = yawQuat.multiply(pitchQuat);
+      camera.quaternion.copy(quat);
     };
 
    document.addEventListener('mousemove', onMouseMove, false);

@@ -11,7 +11,7 @@ var ENTRY_POINTS = [
 
 var JS_LOADERS = [
   'babel?cacheDirectory&presets[]=react,presets[]=es2015,presets[]=stage-0'
-]
+];
 
 var PLUGINS = [];
 if (IS_PRODUCTION) {

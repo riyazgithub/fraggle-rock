@@ -4,6 +4,8 @@
   "description": "3D Shooter came (Tactical)",
   "main": "index.js",
   "scripts": {
+    "build": "webpack",
+    "start": "node ./server/app.js",
     "test": "npm run test:server",
     "test:server": "ls"
   },
@@ -29,7 +31,7 @@
     "node-static": "*",
     "react": "*",
     "three": "^0.82.1",
-    "webpack": "*"
+    "webpack": "^1.12.9"
   },
   "homepage": "https://github.com/riyazgithub/fraggle-rock#readme",
   "devDependencies": {

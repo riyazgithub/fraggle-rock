@@ -70,8 +70,10 @@ module.exports = {
         camera.position.z -= movePerTick * (-Math.cos(thetaY))
       } else if(moveLeft) {
         camera.position.x += movePerTick * (-Math.cos(thetaY));
+        camera.position.z -= movePerTick * (-Math.sin(thetaY));
       } else if(moveRight) {
         camera.position.x -= movePerTick * (-Math.cos(thetaY));
+        camera.position.z += movePerTick * (-Math.sin(thetaY));
       }
     }, 10);
 

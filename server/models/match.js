@@ -31,20 +31,40 @@ const loadClientUpdate = function loadClientUpdate(clientPosition) {
 
 const startPhysics = function startPhysics(io) {
   const context = this;
+
   this.physicsClock = setInterval(function() {
-    
+    const expiredBoxIndices = [];
+    const expiredBallIndices = [];
     context.world.step(context.physicsTick/1000);
 
     // Update ball positions
     for(var i=0; i<context.balls.length; i++){
-      context.ballMeshes[i].position.copy(context.balls[i].position);
-      context.ballMeshes[i].quaternion.copy(context.balls[i].quaternion);
+      const ballMesh = context.ballMeshes[i];
+      const ball = context.balls[i];
+
+      ballMesh.position.copy(ball.position);
+      ballMesh.quaternion.copy(ball.quaternion);
+      if (ballMesh.position.x > 200 || ballMesh.position.y > 200 || ballMesh.position.z > 200) {
+        expiredBallIndices.push(i);
+      }
+    }
+    if (expiredBallIndices.length > 0) {
+      console.log('Deleted out of bounds ball!');
+      let offset = 0;
+      expiredBallIndices.forEach(function(index) {
+        context.ballMeshes.splice(index - offset, 1);
+        context.balls.splice(index - offset, 1);
+        offset--;
+      });
     }
 
     // Update box positions
     for(var i=0; i<context.boxes.length; i++){
-      context.boxMeshes[i].position.copy(context.boxes[i].position);
-      context.boxMeshes[i].quaternion.copy(context.boxes[i].quaternion);
+      const boxMesh = context.boxMeshes[i];
+      const box = context.boxes[i];
+
+      boxMesh.position.copy(box.position);
+      boxMesh.quaternion.copy(box.quaternion);
     }
 
   }, this.physicsTick)

@@ -1,3 +1,4 @@
+const THREE = require('three');
 let socket;
 const sceneUtility = require('./sceneUtility');
 
@@ -14,11 +15,19 @@ const addInitialLoadListener = function addInitialLoadListener(socket) {
   });
 };
 
+const addPhysicsUpdateListener = function addPhysicsUpdateListener(socket) {
+  socket.on('physicsUpdate', function(boxMeshes) {
+    sceneUtility.loadPhysicsUpdate(boxMeshes);
+  })
+}
+
 module.exports = {
-  requestNewMatch: function requestNewMatch() {
+  requestNewMatch: function requestNewMatch(scene) {
     socket = socket || io();
-    socket.emit('addMeToNewMatch', null);
-    addClientUpdateListener(socket);    
+
+    socket.emit('fullScene', scene.toJSON());
+    addClientUpdateListener(socket);
+    addPhysicsUpdateListener(socket);
   },
   joinMatch: function joinMatch(matchNumber) {
     socket = socket || io();
@@ -36,5 +45,5 @@ module.exports = {
     clientPosition.color = 'red';
     clientPosition.uuid = camera.uuid;
     socket.emit('clientUpdate', clientPosition);
-  },
+  }
 };

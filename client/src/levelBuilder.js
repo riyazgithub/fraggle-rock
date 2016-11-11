@@ -12,28 +12,28 @@ module.exports = {
     let material = new THREE.MeshBasicMaterial({ color: 'green' });
     let mesh = new THREE.Mesh(geometry, material);
     mesh.position.x = 5;
-    mesh.position.y = 3;
+    mesh.position.y = 10;
     scene.add(mesh);
 
     // Red Square
     material = new THREE.MeshBasicMaterial({ color: 'red' });
     mesh = new THREE.Mesh(geometry, material);
     mesh.position.z = -5;
-    mesh.position.y = 3;
+    mesh.position.y = 10;
     scene.add(mesh);
 
     // Blue Square
     material = new THREE.MeshBasicMaterial({ color: 'blue' });
     mesh = new THREE.Mesh(geometry, material);
     mesh.position.z = 5;
-    mesh.position.y = 3;
+    mesh.position.y = 10;
     scene.add(mesh);
 
     // Yellow Square
     material = new THREE.MeshBasicMaterial({ color: 'yellow' });
     mesh = new THREE.Mesh(geometry, material);
     mesh.position.x = -5;
-    mesh.position.y = 3;
+    mesh.position.y = 10;
     scene.add(mesh);
 
     // FLOOR

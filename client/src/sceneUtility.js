@@ -186,19 +186,19 @@ module.exports = {
     currentGame = game;
     requestAnimationFrame(animate.bind(null, game));
 
-    currentWorld.step(1/60);
+    // currentWorld.step(1/60);
 
-    // Update ball positions
-    for(var i=0; i<balls.length; i++){
-      ballMeshes[i].position.copy(balls[i].position);
-      ballMeshes[i].quaternion.copy(balls[i].quaternion);
-    }
+    // // Update ball positions
+    // for(var i=0; i<balls.length; i++){
+    //   ballMeshes[i].position.copy(balls[i].position);
+    //   ballMeshes[i].quaternion.copy(balls[i].quaternion);
+    // }
 
-    // Update box positions
-    for(var i=0; i<boxes.length; i++){
-      boxMeshes[i].position.copy(boxes[i].position);
-      boxMeshes[i].quaternion.copy(boxes[i].quaternion);
-    }
+    // // Update box positions
+    // for(var i=0; i<boxes.length; i++){
+    //   boxMeshes[i].position.copy(boxes[i].position);
+    //   boxMeshes[i].quaternion.copy(boxes[i].quaternion);
+    // }
 
     game.renderer.render(game.scene, game.camera);
   },
@@ -222,5 +222,24 @@ module.exports = {
       currentGame.scene.add(mesh);
       remoteClients[clientPosition.uuid] = mesh;
     }
+  },
+  loadPhysicsUpdate: function loadPhysicsUpdate(boxMeshes) {
+    boxMeshes.forEach(function(serverMesh) {
+      let localMesh;
+      currentGame.scene.children.forEach(function(mesh) {
+        if (serverMesh.uuid === mesh.uuid) {
+          localMesh = mesh;
+        }
+      });
+      if (localMesh) {
+        localMesh.position.copy(serverMesh.position);
+        const serverQuaternion = serverMesh.quaternion;
+        serverQuaternion.x = serverQuaternion._x;
+        serverQuaternion.y = serverQuaternion._y;
+        serverQuaternion.z = serverQuaternion._z;
+        serverQuaternion.w = serverQuaternion._w;
+        localMesh.quaternion.copy(serverMesh.quaternion);
+      }
+    })
   }
 };

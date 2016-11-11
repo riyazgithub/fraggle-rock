@@ -28,8 +28,10 @@ server.listen(process.env.PORT || 9999, () => {
 
 io.on('connection', (socket) => {
 
-  socket.on('addMeToNewMatch', function () {
+  socket.on('fullScene', function (scene) {
     const match = matchController.getNewMatch();
+    match.loadFullScene(scene);
+    match.startPhysics(io);
     socket.join(match.guid);
     socket.on('clientUpdate', function (clientPosition) { // listener for client position updates
       io.to(match.guid).emit('clientUpdate', clientPosition); // re-emit to other clients

@@ -102,15 +102,45 @@ module.exports = {
       let x = currentGame.camera.position.x;
       let y = currentGame.camera.position.y;
       let z = currentGame.camera.position.z;
+
+      //ball texture
+      let redBall = new THREE.TextureLoader().load( 'textures/redball.png' );
+      redBall.wrapS = THREE.RepeatWrapping;
+      redBall.wrapT = THREE.RepeatWrapping;
+      redBall.repeat.set( 1, 1 );
+      const redBallMaterial = new THREE.MeshLambertMaterial( {map: redBall} );
+
+      // let techBall = new THREE.TextureLoader().load( 'textures/techcrate.jpg' );
+      // techBall.wrapS = THREE.RepeatWrapping;
+      // techBall.wrapT = THREE.RepeatWrapping;
+      // techBall.repeat.set( 2, 1 );
+      // const techBallMaterial = new THREE.MeshLambertMaterial( {map: techBall} );
+
+      // let futureBall = new THREE.TextureLoader().load( 'textures/futuretile.jpg' );
+      // futureBall.wrapS = THREE.RepeatWrapping;
+      // futureBall.wrapT = THREE.RepeatWrapping;
+      // futureBall.repeat.set( 1, 1 );
+      // const futureBallMaterial = new THREE.MeshLambertMaterial( {map: futureBall} );
+
+      // let balls = [redBallMaterial, techBallMaterial, futureBallMaterial];
+
+      // let randBall = function() {
+      //   let rand = Math.floor(Math.random() * balls.length);
+      //   return balls[rand];
+      // }
+
       const geometry = new THREE.SphereGeometry( .5, 32, 32 );
-      const material = new THREE.MeshBasicMaterial( {color: 'red'} );
-      const ballMesh = new THREE.Mesh( geometry, material );
+      // const material = new THREE.MeshLambertMaterial( {map: redBall} );
+      const ballMesh = new THREE.Mesh( geometry, redBallMaterial );
+
+      ballMesh.castShadow = true;
+      ballMesh.receiveShadow = true;
 
       currentGame.scene.add(ballMesh);
       ballMeshes.push(ballMesh);
-      
+
       const ballBody = new CANNON.Body({ mass: 1 });
-      const ballShape = new CANNON.Sphere(0.2);
+      const ballShape = new CANNON.Sphere(0.5);
       ballBody.addShape(ballShape);
       currentWorld.add(ballBody);
       balls.push(ballBody);
@@ -129,7 +159,7 @@ module.exports = {
     let world = new CANNON.World();
     world.quatNormalizeSkip = 0;
     world.quatNormalizeFast = false;
-    
+
     const solver = new CANNON.GSSolver();
 
     world.defaultContactMaterial.contactEquationStiffness = 1e9;
@@ -147,7 +177,7 @@ module.exports = {
     const physicsContactMaterial = new CANNON.ContactMaterial(physicsMaterial, physicsMaterial, 0.0, 0.3);
     // We must add the contact materials to the world
     world.addContactMaterial(physicsContactMaterial);
-    
+
     // Loop through objects in scene and create copy in CANNON world
     scene.children.forEach(function(mesh) {
       if (mesh.geometry && mesh.geometry.type === 'BoxGeometry') {
@@ -159,10 +189,14 @@ module.exports = {
 
         let cannonPosition = new CANNON.Vec3(position.x, position.y, position.z);
         let cannonQuat = new CANNON.Quaternion(quaternion.x, quaternion.y, quaternion.z, quaternion.w);
-        let cannonSize = new CANNON.Vec3(width, height, depth);
+        let cannonSize = new CANNON.Vec3(width/2, height/2, depth/2);
 
         let cannonBox = new CANNON.Box(cannonSize);
         let mass;
+        if (width > 100) {
+          return;
+        }
+
         if (width === 100) {
           mass = 0;
         } else {
@@ -174,7 +208,7 @@ module.exports = {
         cannonBody.quaternion = cannonQuat;
         cannonBody.linearDamping = 0.01;
         cannonBody.angularDamping = 0.01;
-        
+
         boxMeshes.push(mesh);
         boxes.push(cannonBody);
         world.add(cannonBody);
@@ -199,7 +233,6 @@ module.exports = {
       boxMeshes[i].position.copy(boxes[i].position);
       boxMeshes[i].quaternion.copy(boxes[i].quaternion);
     }
-
     game.renderer.render(game.scene, game.camera);
   },
   loadClientUpdate: function loadClientUpdate(clientPosition) {

@@ -83,7 +83,7 @@ const shootBall = function shootBall(camera) {
   let x = camera.position.x;
   let y = camera.position.y;
   let z = camera.position.z;
-  const geometry = new THREE.SphereGeometry( .2, 32, 32 );
+  const geometry = new THREE.SphereGeometry( .5, 32, 32 );
   const material = new THREE.MeshBasicMaterial( {color: 'red'} );
   const ballMesh = new THREE.Mesh( geometry, material );
 
@@ -91,7 +91,7 @@ const shootBall = function shootBall(camera) {
   this.ballMeshes.push(ballMesh);
   
   const ballBody = new CANNON.Body({ mass: 10 });
-  const ballShape = new CANNON.Sphere(0.2);
+  const ballShape = new CANNON.Sphere(0.5);
   ballBody.addShape(ballShape);
   this.world.add(ballBody);
   this.balls.push(ballBody);
@@ -132,18 +132,15 @@ const loadFullScene = function loadFullScene(scene) {
   
   // Loop through objects in scene and create copy in CANNON world
   scene.object.children.forEach(function(mesh) {
+    if (!mesh.userData || mesh.userData.mass === undefined || mesh.userData.mass < 0) {
+      return;
+    }
     let meshGeometry;
-    let meshMaterial;
     scene.geometries.forEach(function(geometry) {
-      if (mesh.geometry === geometry.uuid) {
+      if (geometry.uuid === mesh.geometry) {
         meshGeometry = geometry;
       }
-    })
-    scene.materials.forEach(function(material) {
-      if (mesh.material === material.uuid) {
-        meshMaterial = material;
-      }
-    })
+    });
     if (meshGeometry && meshGeometry.type === 'BoxGeometry') {
       let position = new THREE.Vector3();
       let quaternion = new THREE.Quaternion();
@@ -154,26 +151,18 @@ const loadFullScene = function loadFullScene(scene) {
       let width = meshGeometry.width;
       let height = meshGeometry.height;
       let depth = meshGeometry.depth;
-
       let cannonPosition = new CANNON.Vec3(position.x, position.y, position.z);
       let cannonQuat = new CANNON.Quaternion(quaternion.x, quaternion.y, quaternion.z, quaternion.w);
       let cannonSize = new CANNON.Vec3(width/2, height/2, depth/2); 
-
       let cannonBox = new CANNON.Box(cannonSize);
-      let mass;
-      if (width === 100) {
-        mass = 0;
-      } else {
-        mass = height*width*depth;
-      }
-      let cannonBody = new CANNON.Body({mass: mass});
+      let cannonBody = new CANNON.Body({mass: mesh.userData.mass});
       cannonBody.addShape(cannonBox);
       cannonBody.position = cannonPosition;
       cannonBody.quaternion = cannonQuat;
       cannonBody.linearDamping = 0.01;
       cannonBody.angularDamping = 0.01;
 
-      context.boxMeshes.push({uuid: mesh.uuid, position, quaternion, geometry: {width, height, depth}, color: meshMaterial.color});
+      context.boxMeshes.push({uuid: mesh.uuid, position, quaternion, geometry: {width, height, depth}, type: mesh.userData.name});
       context.boxes.push(cannonBody);
       world.add(cannonBody);
     }

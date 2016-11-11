@@ -1,6 +1,7 @@
 const sceneUtility = require('./sceneUtility');
 const socketUtility = require('./socketUtility');
-const levelBuilder = require('./levelBuilder');
+const LevelBuilder = require('./levelBuilder');
+const levelBuilder = new LevelBuilder();
 const rendererBuilder = require('./rendererBuilder');
 const cameraBuilder = require('./cameraBuilder');
 let serverUpdateTick;

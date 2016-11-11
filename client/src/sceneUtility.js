@@ -1,4 +1,5 @@
 const THREE = require('three');
+const objectBuilder = require('./objectBuilder');
 
 const remoteClients = {};
 const remoteScene = {};
@@ -103,6 +104,25 @@ module.exports = {
       });
     });
   },
+  oldClickControls: function oldClickControls() {
+    window.addEventListener("click",function(e){
+      let x = currentGame.camera.position.x;
+      let y = currentGame.camera.position.y;
+      let z = currentGame.camera.position.z;
+
+      //ball texture
+      let redBall = new THREE.TextureLoader().load( 'textures/redball.png' );
+      redBall.wrapS = THREE.RepeatWrapping;
+      redBall.wrapT = THREE.RepeatWrapping;
+      redBall.repeat.set( 1, 1 );
+      const geometry = new THREE.SphereGeometry( .5, 32, 32 );
+      const redBallMaterial = new THREE.MeshLambertMaterial( {map: redBall} );
+      const ballMesh = new THREE.Mesh( geometry, redBallMaterial );
+      ballMesh.castShadow = true;
+      ballMesh.receiveShadow = true;
+      currentGame.scene.add(ballMesh);
+    });
+  },
   animate: function animate(game) {
     currentGame = game;
     requestAnimationFrame(animate.bind(null, game));
@@ -149,17 +169,15 @@ module.exports = {
         localMesh.quaternion.copy(serverMesh.quaternion);
       } else {
         const serverGeometry = serverMesh.geometry;
-        const geometry = new THREE.BoxGeometry(serverGeometry.width, serverGeometry.height, serverGeometry.depth);
-        const material = new THREE.MeshBasicMaterial({ color: serverMesh.color }); //TODO get serverMeshClor
-        const boxMesh = new THREE.Mesh( geometry, material);
-        serverShapeMap[serverMesh.uuid] = boxMesh.uuid;
-        boxMesh.position.copy(serverMesh.position);
+        const serverPosition = serverMesh.position;
         const serverQuaternion = serverMesh.quaternion;
+        const serverType = serverMesh.type;
         serverQuaternion.x = serverQuaternion._x;
         serverQuaternion.y = serverQuaternion._y;
         serverQuaternion.z = serverQuaternion._z;
         serverQuaternion.w = serverQuaternion._w;
-        boxMesh.quaternion.copy(serverMesh.quaternion);
+        const boxMesh = objectBuilder[serverType](serverGeometry, serverPosition, serverQuaternion)
+        serverShapeMap[serverMesh.uuid] = boxMesh.uuid;
         currentGame.scene.add(boxMesh);
       }
     });
@@ -179,9 +197,17 @@ module.exports = {
         serverQuaternion.w = serverQuaternion._w;
         localMesh.quaternion.copy(serverMesh.quaternion);
       } else {
-        const geometry = new THREE.SphereGeometry(0.2, 32, 32);
-        const material = new THREE.MeshBasicMaterial({ color: 'red' });
-        const ballMesh = new THREE.Mesh( geometry, material);
+
+        let redBall = new THREE.TextureLoader().load( 'textures/redball.png' );
+        redBall.wrapS = THREE.RepeatWrapping;
+        redBall.wrapT = THREE.RepeatWrapping;
+        redBall.repeat.set( 1, 1 );
+        const geometry = new THREE.SphereGeometry( .5, 32, 32 );
+        const redBallMaterial = new THREE.MeshLambertMaterial( {map: redBall} );
+        const ballMesh = new THREE.Mesh( geometry, redBallMaterial );
+        ballMesh.castShadow = true;
+        ballMesh.receiveShadow = true;
+
         serverShapeMap[serverMesh.uuid] = ballMesh.uuid;
         ballMesh.position.copy(serverMesh.position);
         const serverQuaternion = serverMesh.quaternion;

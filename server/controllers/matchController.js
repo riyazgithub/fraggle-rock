@@ -28,6 +28,5 @@ module.exports = {
       }
     }
     delete liveMatches[deleteKey];
-    debugger;
   }
 };

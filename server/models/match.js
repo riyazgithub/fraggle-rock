@@ -7,7 +7,7 @@ const getGuid = function getGuid() {
 };
 
 module.exports = function Match() {
-  this.guid = getGuid;
+  this.guid = getGuid();
   this.clients = {};
   this.boxMeshes = [];
   this.boxes = [];

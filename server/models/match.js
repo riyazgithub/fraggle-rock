@@ -130,7 +130,7 @@ const loadFullScene = function loadFullScene(scene) {
 
       let cannonPosition = new CANNON.Vec3(position.x, position.y, position.z);
       let cannonQuat = new CANNON.Quaternion(quaternion.x, quaternion.y, quaternion.z, quaternion.w);
-      let cannonSize = new CANNON.Vec3(width, height, depth);
+      let cannonSize = new CANNON.Vec3(width/2, height/2, depth/2); 
 
       let cannonBox = new CANNON.Box(cannonSize);
       let mass;

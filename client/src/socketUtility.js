@@ -16,8 +16,8 @@ const addInitialLoadListener = function addInitialLoadListener(socket) {
 };
 
 const addPhysicsUpdateListener = function addPhysicsUpdateListener(socket) {
-  socket.on('physicsUpdate', function(boxMeshes) {
-    sceneUtility.loadPhysicsUpdate(boxMeshes);
+  socket.on('physicsUpdate', function(meshesObject) {
+    sceneUtility.loadPhysicsUpdate(meshesObject);
   })
 }
 
@@ -45,5 +45,8 @@ module.exports = {
     clientPosition.color = 'red';
     clientPosition.uuid = camera.uuid;
     socket.emit('clientUpdate', clientPosition);
+  },
+  emitShootBall: function emitShootBall(camera) {
+    socket.emit('shootBall', camera);
   }
 };

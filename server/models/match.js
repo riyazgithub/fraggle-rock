@@ -17,6 +17,7 @@ module.exports = function Match() {
   this.loadClientUpdate = loadClientUpdate.bind(this);
   this.loadFullScene = loadFullScene.bind(this);
   this.startPhysics = startPhysics.bind(this);
+  this.shootBall = shootBall.bind(this);
   this.physicsEmitClock;
   this.physicsEmitTick = 20; //period between physics emits
   this.physicsClock;
@@ -34,10 +35,10 @@ const startPhysics = function startPhysics(io) {
     context.world.step(context.physicsTick/1000);
 
     // Update ball positions
-    // for(var i=0; i<balls.length; i++){
-    //   ballMeshes[i].position.copy(balls[i].position);
-    //   ballMeshes[i].quaternion.copy(balls[i].quaternion);
-    // }
+    for(var i=0; i<context.balls.length; i++){
+      context.ballMeshes[i].position.copy(context.balls[i].position);
+      context.ballMeshes[i].quaternion.copy(context.balls[i].quaternion);
+    }
 
     // Update box positions
     for(var i=0; i<context.boxes.length; i++){
@@ -48,8 +49,39 @@ const startPhysics = function startPhysics(io) {
   }, this.physicsTick)
 
   this.physicsEmitClock = setInterval(function() {
-    io.to(context.guid).emit('physicsUpdate', context.boxMeshes)
+    const ballMeshes = [];
+    context.ballMeshes.forEach(function(mesh) {
+      ballMeshes.push({uuid: mesh.uuid, position: mesh.position, quaternion: mesh.quaternion})
+    })
+    io.to(context.guid).emit('physicsUpdate', {boxMeshes: context.boxMeshes, ballMeshes: ballMeshes})
   }, this.physicsEmitTick)
+};
+
+const shootBall = function shootBall(camera) {
+
+  let x = camera.position.x;
+  let y = camera.position.y;
+  let z = camera.position.z;
+  const geometry = new THREE.SphereGeometry( .2, 32, 32 );
+  const material = new THREE.MeshBasicMaterial( {color: 'red'} );
+  const ballMesh = new THREE.Mesh( geometry, material );
+
+  // currentGame.scene.add(ballMesh);
+  this.ballMeshes.push(ballMesh);
+  
+  const ballBody = new CANNON.Body({ mass: 1 });
+  const ballShape = new CANNON.Sphere(0.2);
+  ballBody.addShape(ballShape);
+  this.world.add(ballBody);
+  this.balls.push(ballBody);
+
+  const shootDirection = camera.direction;
+  ballBody.velocity.set(  shootDirection.x * 15, shootDirection.y * 15, shootDirection.z * 15);
+  x += shootDirection.x * 2;
+  y += shootDirection.y * 2;
+  z += shootDirection.z * 2;
+  ballBody.position.set(x,y,z);
+  ballMesh.position.set(x,y,z);
 };
 
 const loadFullScene = function loadFullScene(scene) {

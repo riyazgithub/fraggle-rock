@@ -27,7 +27,7 @@ const startGame = function startGame() {
   sceneUtility.addLookControls(game.camera);
   sceneUtility.addMoveControls(game.camera);
   // sceneUtility.initCannon(game.scene);
-  // sceneUtility.addClickControls();
+  sceneUtility.addClickControls(socketUtility);
   sceneUtility.animate(game); //Renders screen to page and requests re-render at next animation frame
   socketUtility.requestNewMatch(game.scene); //Request to the server to create a new match
   startUpdateTick(game.camera); //This starts an interval to emit player position to server on timer

@@ -6,6 +6,7 @@ let currentWorld;
 let pitch = 0;
 let yaw = 0;
 let ballMeshes = [];
+let ballMeshMap = {};
 let balls = [];
 let boxMeshes = [];
 let boxes = [];
@@ -97,31 +98,9 @@ module.exports = {
     document.addEventListener('keyup', onKeyUp, false);
     return updateCamera;
   },
-  addClickControls: function addClickControls() {
+  addClickControls: function addClickControls(socketUtility) {
     window.addEventListener("click",function(e){
-      let x = currentGame.camera.position.x;
-      let y = currentGame.camera.position.y;
-      let z = currentGame.camera.position.z;
-      const geometry = new THREE.SphereGeometry( .5, 32, 32 );
-      const material = new THREE.MeshBasicMaterial( {color: 'red'} );
-      const ballMesh = new THREE.Mesh( geometry, material );
-
-      currentGame.scene.add(ballMesh);
-      ballMeshes.push(ballMesh);
-      
-      const ballBody = new CANNON.Body({ mass: 1 });
-      const ballShape = new CANNON.Sphere(0.2);
-      ballBody.addShape(ballShape);
-      currentWorld.add(ballBody);
-      balls.push(ballBody);
-
-      const shootDirection = currentGame.camera.getWorldDirection();
-      ballBody.velocity.set(  shootDirection.x * 15, shootDirection.y * 15, shootDirection.z * 15);
-      x += shootDirection.x * 2;
-      y += shootDirection.y * 2;
-      z += shootDirection.z * 2;
-      ballBody.position.set(x,y,z);
-      ballMesh.position.set(x,y,z);
+      socketUtility.emitShootBall({position: currentGame.camera.position, direction: currentGame.camera.getWorldDirection()});
     });
   },
   initCannon: function initCannon(scene) {
@@ -223,7 +202,9 @@ module.exports = {
       remoteClients[clientPosition.uuid] = mesh;
     }
   },
-  loadPhysicsUpdate: function loadPhysicsUpdate(boxMeshes) {
+  loadPhysicsUpdate: function loadPhysicsUpdate(meshObject) {
+    const boxMeshes = meshObject.boxMeshes;
+    const ballMeshes = meshObject.ballMeshes;
     boxMeshes.forEach(function(serverMesh) {
       let localMesh;
       currentGame.scene.children.forEach(function(mesh) {
@@ -239,6 +220,29 @@ module.exports = {
         serverQuaternion.z = serverQuaternion._z;
         serverQuaternion.w = serverQuaternion._w;
         localMesh.quaternion.copy(serverMesh.quaternion);
+      }
+    });
+    ballMeshes.forEach(function(serverMesh) {
+      let localMesh;
+      currentGame.scene.children.forEach(function(mesh) {
+        if (ballMeshMap[serverMesh.uuid] === mesh.uuid) {
+          localMesh = mesh;
+        }
+      });
+      if (localMesh) {
+        localMesh.position.copy(serverMesh.position);
+        const serverQuaternion = serverMesh.quaternion;
+        serverQuaternion.x = serverQuaternion._x;
+        serverQuaternion.y = serverQuaternion._y;
+        serverQuaternion.z = serverQuaternion._z;
+        serverQuaternion.w = serverQuaternion._w;
+        localMesh.quaternion.copy(serverMesh.quaternion);
+      } else {
+        const geometry = new THREE.SphereGeometry( .2, 32, 32 );
+        const material = new THREE.MeshBasicMaterial( {color: 'red'} );
+        const ballMesh = new THREE.Mesh( geometry, material );
+        ballMeshMap[serverMesh.uuid] = ballMesh.uuid;
+        currentGame.scene.add(ballMesh);
       }
     })
   }

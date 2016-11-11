@@ -33,21 +33,25 @@ io.on('connection', (socket) => {
     match.loadFullScene(scene);
     match.startPhysics(io);
     socket.join(match.guid);
+    socket.on('shootBall', function(camera) {
+      match.shootBall(camera);
+    });
     socket.on('clientUpdate', function (clientPosition) { // listener for client position updates
       io.to(match.guid).emit('clientUpdate', clientPosition); // re-emit to other clients
       match.loadClientUpdate(clientPosition); // update server's copy of client position
     });
   });
 
-  socket.on('addMeToMatch', function (matchId) {
-    const match = matchController.getMatch(matchId);
-    socket.join(match.guid);
-    socket.on('clientUpdate', function (clientPosition) {
-      io.to(match.guid).emit('clientUpdate', clientPosition);
-      match.loadClientUpdate(clientPosition);
-    });
-    io.to(match.guid).emit('initMatch', match); // emit full match to new client to get them up to date
-  });
+//   socket.on('addMeToMatch', function (matchId) {
+//     const match = matchController.getMatch(matchId);
+//     socket.join(match.guid);
+
+//     socket.on('clientUpdate', function (clientPosition) {
+//       io.to(match.guid).emit('clientUpdate', clientPosition);
+//       match.loadClientUpdate(clientPosition);
+//     });
+//     io.to(match.guid).emit('initMatch', match); // emit full match to new client to get them up to date
+//   });
 });
 
 module.exports = app;

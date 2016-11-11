@@ -156,6 +156,6 @@ const loadFullScene = function loadFullScene(scene) {
 };
 
 const shutdown = function shutdown() {
-  clearInterval(this.physicsTick);
-  clearInterval(this.physicsEmitTick);
+  clearInterval(this.physicsClock);
+  clearInterval(this.physicsEmitClock);
 }

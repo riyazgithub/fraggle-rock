@@ -1,9 +1,14 @@
 const THREE = require('three');
+const CANNON = require('cannon');
 const remoteClients = {};
 let currentGame;
+let currentWorld;
 let pitch = 0;
 let yaw = 0;
 let ballMeshes = [];
+let balls = [];
+let boxMeshes = [];
+let boxes = [];
 
 module.exports = {
   addLookControls: function addLookControls(camera) {
@@ -97,36 +102,105 @@ module.exports = {
       let x = currentGame.camera.position.x;
       let y = currentGame.camera.position.y;
       let z = currentGame.camera.position.z;
-      // const ballBody = new CANNON.Body({ mass: 1 });
-      // ballBody.addShape(ballShape);
       const geometry = new THREE.SphereGeometry( .5, 32, 32 );
       const material = new THREE.MeshBasicMaterial( {color: 'red'} );
       const ballMesh = new THREE.Mesh( geometry, material );
 
-      // world.add(ballBody);
       currentGame.scene.add(ballMesh);
-      // ballMesh.castShadow = true;
-      // ballMesh.receiveShadow = true;
-      // balls.push(ballBody);
       ballMeshes.push(ballMesh);
-      // getShootDir(shootDirection);
-      // ballBody.velocity.set(  shootDirection.x * shootVelo,
-                              // shootDirection.y * shootVelo,
-                              // shootDirection.z * shootVelo);
+      
+      const ballBody = new CANNON.Body({ mass: 1 });
+      const ballShape = new CANNON.Sphere(0.2);
+      ballBody.addShape(ballShape);
+      currentWorld.add(ballBody);
+      balls.push(ballBody);
 
-      // Move the ball outside the player sphere
       const shootDirection = currentGame.camera.getWorldDirection();
+      ballBody.velocity.set(  shootDirection.x * 15, shootDirection.y * 15, shootDirection.z * 15);
       x += shootDirection.x * 2;
       y += shootDirection.y * 2;
       z += shootDirection.z * 2;
-      // ballBody.position.set(x,y,z);
+      ballBody.position.set(x,y,z);
       ballMesh.position.set(x,y,z);
     });
   },
+  initCannon: function initCannon(scene) {
+    // Setup our world
+    let world = new CANNON.World();
+    world.quatNormalizeSkip = 0;
+    world.quatNormalizeFast = false;
+    
+    const solver = new CANNON.GSSolver();
+
+    world.defaultContactMaterial.contactEquationStiffness = 1e9;
+    world.defaultContactMaterial.contactEquationRelaxation = 4;
+
+    solver.iterations = 7;
+    solver.tolerance = 0.1;
+    world.solver = new CANNON.SplitSolver(solver);
+
+    world.gravity.set(0,-20,0);
+    world.broadphase = new CANNON.NaiveBroadphase();
+
+    // Create a slippery material (friction coefficient = 0.0)
+    const physicsMaterial = new CANNON.Material("slipperyMaterial");
+    const physicsContactMaterial = new CANNON.ContactMaterial(physicsMaterial, physicsMaterial, 0.0, 0.3);
+    // We must add the contact materials to the world
+    world.addContactMaterial(physicsContactMaterial);
+    
+    // Loop through objects in scene and create copy in CANNON world
+    scene.children.forEach(function(mesh) {
+      if (mesh.geometry && mesh.geometry.type === 'BoxGeometry') {
+        let position = mesh.position;
+        let quaternion = mesh.quaternion;
+        let width = mesh.geometry.parameters.width;
+        let height = mesh.geometry.parameters.height;
+        let depth = mesh.geometry.parameters.depth;
+
+        let cannonPosition = new CANNON.Vec3(position.x, position.y, position.z);
+        let cannonQuat = new CANNON.Quaternion(quaternion.x, quaternion.y, quaternion.z, quaternion.w);
+        let cannonSize = new CANNON.Vec3(width, height, depth);
+
+        let cannonBox = new CANNON.Box(cannonSize);
+        let mass;
+        if (width === 100) {
+          mass = 0;
+        } else {
+          mass = height*width*depth;
+        }
+        let cannonBody = new CANNON.Body({mass: mass});
+        cannonBody.addShape(cannonBox);
+        cannonBody.position = cannonPosition;
+        cannonBody.quaternion = cannonQuat;
+        cannonBody.linearDamping = 0.01;
+        cannonBody.angularDamping = 0.01;
+        
+        boxMeshes.push(mesh);
+        boxes.push(cannonBody);
+        world.add(cannonBody);
+      }
+    });
+    currentWorld = world;
+  },
   animate: function animate(game) {
     currentGame = game;
-    game.renderer.render(game.scene, game.camera);
     requestAnimationFrame(animate.bind(null, game));
+
+    currentWorld.step(1/60);
+
+    // Update ball positions
+    for(var i=0; i<balls.length; i++){
+      ballMeshes[i].position.copy(balls[i].position);
+      ballMeshes[i].quaternion.copy(balls[i].quaternion);
+    }
+
+    // Update box positions
+    for(var i=0; i<boxes.length; i++){
+      boxMeshes[i].position.copy(boxes[i].position);
+      boxMeshes[i].quaternion.copy(boxes[i].quaternion);
+    }
+
+    game.renderer.render(game.scene, game.camera);
   },
   loadClientUpdate: function loadClientUpdate(clientPosition) {
     if (currentGame.camera.uuid !== clientPosition.uuid) {

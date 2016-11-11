@@ -26,6 +26,7 @@ const startGame = function startGame() {
   const game = init(); //creates camera, renderer and scene data
   sceneUtility.addLookControls(game.camera);
   sceneUtility.addMoveControls(game.camera);
+  sceneUtility.initCannon(game.scene);
   sceneUtility.addClickControls();
   sceneUtility.animate(game); //Renders screen to page and requests re-render at next animation frame
   socketUtility.requestNewMatch(); //Request to the server to create a new match

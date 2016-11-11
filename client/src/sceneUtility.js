@@ -242,6 +242,13 @@ module.exports = {
         const material = new THREE.MeshBasicMaterial( {color: 'red'} );
         const ballMesh = new THREE.Mesh( geometry, material );
         ballMeshMap[serverMesh.uuid] = ballMesh.uuid;
+        ballMesh.position.copy(serverMesh.position);
+        const serverQuaternion = serverMesh.quaternion;
+        serverQuaternion.x = serverQuaternion._x;
+        serverQuaternion.y = serverQuaternion._y;
+        serverQuaternion.z = serverQuaternion._z;
+        serverQuaternion.w = serverQuaternion._w;
+        ballMesh.quaternion.copy(serverMesh.quaternion);
         currentGame.scene.add(ballMesh);
       }
     })

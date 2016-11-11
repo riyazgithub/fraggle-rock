@@ -17,4 +17,17 @@ module.exports = {
     }
     // return liveMatches[matchId];
   },
+  deleteMatch: function deleteMatch(matchId) {
+    let match;
+    let deleteKey;
+    for (var key in liveMatches) {
+      if (liveMatches[key].guid === matchId) {
+        match = liveMatches[key];
+        match.shutdown();
+        deleteKey = key;
+      }
+    }
+    delete liveMatches[deleteKey];
+    debugger;
+  }
 };

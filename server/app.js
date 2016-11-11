@@ -40,6 +40,9 @@ io.on('connection', (socket) => {
       io.to(match.guid).emit('clientUpdate', clientPosition); // re-emit to other clients
       match.loadClientUpdate(clientPosition); // update server's copy of client position
     });
+    socket.on('disconnect', function (e) {
+      matchController.deleteMatch(match.guid);
+    })
   });
 
 //   socket.on('addMeToMatch', function (matchId) {

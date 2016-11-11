@@ -8,7 +8,7 @@ module.exports = {
     scene.add(new THREE.AmbientLight(0x111111));
 
     // Green Square
-    let geometry = new THREE.BoxGeometry(1, 1, 1);
+    let geometry = new THREE.BoxGeometry(3, 3, 3);
     let material = new THREE.MeshBasicMaterial({ color: 'green' });
     let mesh = new THREE.Mesh(geometry, material);
     mesh.position.x = 5;

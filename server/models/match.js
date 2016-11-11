@@ -18,10 +18,11 @@ module.exports = function Match() {
   this.loadFullScene = loadFullScene.bind(this);
   this.startPhysics = startPhysics.bind(this);
   this.shootBall = shootBall.bind(this);
+  this.shutdown = shutdown.bind(this);
   this.physicsEmitClock;
   this.physicsEmitTick = 20; //period between physics emits
   this.physicsClock;
-  this.physicsTick = 1/50*1000;
+  this.physicsTick = 1/150*1000;
 };
 
 const loadClientUpdate = function loadClientUpdate(clientPosition) {
@@ -69,14 +70,14 @@ const shootBall = function shootBall(camera) {
   // currentGame.scene.add(ballMesh);
   this.ballMeshes.push(ballMesh);
   
-  const ballBody = new CANNON.Body({ mass: 1 });
+  const ballBody = new CANNON.Body({ mass: 10 });
   const ballShape = new CANNON.Sphere(0.2);
   ballBody.addShape(ballShape);
   this.world.add(ballBody);
   this.balls.push(ballBody);
 
   const shootDirection = camera.direction;
-  ballBody.velocity.set(  shootDirection.x * 15, shootDirection.y * 15, shootDirection.z * 15);
+  ballBody.velocity.set(  shootDirection.x * 100, shootDirection.y * 100, shootDirection.z * 100);
   x += shootDirection.x * 2;
   y += shootDirection.y * 2;
   z += shootDirection.z * 2;
@@ -153,3 +154,8 @@ const loadFullScene = function loadFullScene(scene) {
   });
   this.world = world;
 };
+
+const shutdown = function shutdown() {
+  clearInterval(this.physicsTick);
+  clearInterval(this.physicsEmitTick);
+}

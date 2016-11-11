@@ -24,7 +24,6 @@ const addPhysicsUpdateListener = function addPhysicsUpdateListener(socket) {
 module.exports = {
   requestNewMatch: function requestNewMatch(scene) {
     socket = socket || io();
-
     socket.emit('fullScene', scene.toJSON());
     addClientUpdateListener(socket);
     addPhysicsUpdateListener(socket);
@@ -32,7 +31,8 @@ module.exports = {
   joinMatch: function joinMatch(matchNumber) {
     socket = socket || io();
     socket.emit('addMeToMatch', matchNumber);
-    addInitialLoadListener(socket);
+    addClientUpdateListener(socket);
+    addPhysicsUpdateListener(socket);
   },
   emitClientPosition: function emitClientPositon(camera) {
     const clientPosition = {};

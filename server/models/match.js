@@ -113,9 +113,15 @@ const loadFullScene = function loadFullScene(scene) {
   // Loop through objects in scene and create copy in CANNON world
   scene.object.children.forEach(function(mesh) {
     let meshGeometry;
+    let meshMaterial;
     scene.geometries.forEach(function(geometry) {
       if (mesh.geometry === geometry.uuid) {
         meshGeometry = geometry;
+      }
+    })
+    scene.materials.forEach(function(material) {
+      if (mesh.material === material.uuid) {
+        meshMaterial = material;
       }
     })
     if (meshGeometry && meshGeometry.type === 'BoxGeometry') {
@@ -147,7 +153,7 @@ const loadFullScene = function loadFullScene(scene) {
       cannonBody.linearDamping = 0.01;
       cannonBody.angularDamping = 0.01;
 
-      context.boxMeshes.push({uuid: mesh.uuid, position, quaternion});
+      context.boxMeshes.push({uuid: mesh.uuid, position, quaternion, geometry: {width, height, depth}, color: meshMaterial.color});
       context.boxes.push(cannonBody);
       world.add(cannonBody);
     }

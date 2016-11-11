@@ -1,10 +1,12 @@
 const THREE = require('three');
 
 const remoteClients = {};
+const remoteScene = {};
 let currentGame;
 let pitch = 0;
 let yaw = 0;
-const ballMeshMap = {};
+let host = false;
+const serverShapeMap = {};
 
 module.exports = {
   addLookControls: function addLookControls(camera) {
@@ -133,7 +135,7 @@ module.exports = {
     boxMeshes.forEach((serverMesh) => {
       let localMesh;
       currentGame.scene.children.forEach((mesh) => {
-        if (serverMesh.uuid === mesh.uuid) {
+        if (serverShapeMap[serverMesh.uuid] === mesh.uuid || serverMesh.uuid === mesh.uuid) {
           localMesh = mesh;
         }
       });
@@ -145,12 +147,26 @@ module.exports = {
         serverQuaternion.z = serverQuaternion._z;
         serverQuaternion.w = serverQuaternion._w;
         localMesh.quaternion.copy(serverMesh.quaternion);
+      } else {
+        const serverGeometry = serverMesh.geometry;
+        const geometry = new THREE.BoxGeometry(serverGeometry.width, serverGeometry.height, serverGeometry.depth);
+        const material = new THREE.MeshBasicMaterial({ color: serverMesh.color }); //TODO get serverMeshClor
+        const boxMesh = new THREE.Mesh( geometry, material);
+        serverShapeMap[serverMesh.uuid] = boxMesh.uuid;
+        boxMesh.position.copy(serverMesh.position);
+        const serverQuaternion = serverMesh.quaternion;
+        serverQuaternion.x = serverQuaternion._x;
+        serverQuaternion.y = serverQuaternion._y;
+        serverQuaternion.z = serverQuaternion._z;
+        serverQuaternion.w = serverQuaternion._w;
+        boxMesh.quaternion.copy(serverMesh.quaternion);
+        currentGame.scene.add(boxMesh);
       }
     });
     ballMeshes.forEach((serverMesh) => {
       let localMesh;
       currentGame.scene.children.forEach((mesh) => {
-        if (ballMeshMap[serverMesh.uuid] === mesh.uuid) {
+        if (serverShapeMap[serverMesh.uuid] === mesh.uuid) {
           localMesh = mesh;
         }
       });
@@ -166,7 +182,7 @@ module.exports = {
         const geometry = new THREE.SphereGeometry(0.2, 32, 32);
         const material = new THREE.MeshBasicMaterial({ color: 'red' });
         const ballMesh = new THREE.Mesh( geometry, material);
-        ballMeshMap[serverMesh.uuid] = ballMesh.uuid;
+        serverShapeMap[serverMesh.uuid] = ballMesh.uuid;
         ballMesh.position.copy(serverMesh.position);
         const serverQuaternion = serverMesh.quaternion;
         serverQuaternion.x = serverQuaternion._x;

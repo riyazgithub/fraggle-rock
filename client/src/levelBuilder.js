@@ -1,11 +1,13 @@
 const THREE = require('three');
 
+const lights = new THREE.AmbientLight(0x111111);
+
 module.exports = {
   buildLevelOne: function buildLevelOne() {
     const scene = new THREE.Scene();
 
     // Ambient Light
-    scene.add(new THREE.AmbientLight(0x111111));
+    scene.add(lights);
 
     // Green Square
     let geometry = new THREE.BoxGeometry(3, 3, 3);
@@ -42,6 +44,11 @@ module.exports = {
     mesh = new THREE.Mesh(geometry, material);
     mesh.position.y = -5;
     scene.add(mesh);
+    return scene;
+  },
+  buildBlankLevelOne: function buildBlankLevelOne() {
+    const scene = new THREE.Scene();
+    scene.add(lights);
     return scene;
   }
 }

@@ -7,7 +7,7 @@ module.exports = {
     liveMatches[match.guid] = match;
     return match;
   },
-  getMatch: function getMatch(matchId) {
+  getMatch: function getMatch(matchId) { //TODO fix to find match by id
     let sent = false;
     for (var key in liveMatches) {
       if (!sent) {
@@ -15,7 +15,6 @@ module.exports = {
         return liveMatches[key]; 
       }
     }
-    // return liveMatches[matchId];
   },
   deleteMatch: function deleteMatch(matchId) {
     let match;
@@ -32,5 +31,5 @@ module.exports = {
     delete liveMatches[deleteKey];
     count--;
     console.log(`Deleting match, there are ${count} open matches.`);
-  }
+  },
 };

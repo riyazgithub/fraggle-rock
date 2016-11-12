@@ -89,5 +89,18 @@ module.exports = {
     addShadow(mesh);
     mesh.userData.name = 'playerModel';
     return mesh;
+  },
+  redBall: function(size, position, quaternion) {
+    let redBall = new THREE.TextureLoader().load( 'textures/redball2.jpg' );
+    redBall.wrapS = THREE.RepeatWrapping;
+    redBall.wrapT = THREE.RepeatWrapping;
+    redBall.repeat.set( 1, 1 );
+    const geometry = new THREE.SphereGeometry( size.radius, size.widthSegments, size.heightSegments );
+    const redBallMaterial = new THREE.MeshLambertMaterial( {map: redBall} );
+    const ballMesh = new THREE.Mesh( geometry, redBallMaterial );
+    addShadow(ballMesh);
+    initPosition(ballMesh, position, quaternion);
+    ballMesh.userData.name = 'redBall';
+    return ballMesh;
   }
 }

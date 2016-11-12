@@ -14,7 +14,6 @@ module.exports = {
     const onMouseMove = function onMouseMove(event) {
       const movementX = event.movementX;
       const movementY = event.movementY;
-      // TODO - FIX THIS
       yaw -= movementX * 0.002;
       pitch -= movementY * 0.002;
 
@@ -116,28 +115,10 @@ module.exports = {
       });
     });
   },
-  oldClickControls: function oldClickControls() {
-    window.addEventListener("click",function(e){
-      let x = currentGame.camera.position.x;
-      let y = currentGame.camera.position.y;
-      let z = currentGame.camera.position.z;
-
-      //ball texture
-      let redBall = new THREE.TextureLoader().load( 'textures/redball2.jpg' );
-      redBall.wrapS = THREE.RepeatWrapping;
-      redBall.wrapT = THREE.RepeatWrapping;
-      redBall.repeat.set( 1, 1 );
-      const geometry = new THREE.SphereGeometry( .5, 32, 32 );
-      const redBallMaterial = new THREE.MeshLambertMaterial( {map: redBall} );
-      const ballMesh = new THREE.Mesh( geometry, redBallMaterial );
-      ballMesh.castShadow = true;
-      ballMesh.receiveShadow = true;
-      currentGame.scene.add(ballMesh);
-    });
-  },
   animate: function animate(game) {
     currentGame = game;
     requestAnimationFrame(animate.bind(null, game));
+    module.exports.stepClientPhysics();
     game.renderer.render(game.scene, game.camera);
   },
   loadClientUpdate: function loadClientUpdate(clientPosition) {
@@ -198,24 +179,8 @@ module.exports = {
         serverQuaternion.w = serverQuaternion._w;
         localMesh.quaternion.copy(serverMesh.quaternion);
       } else {
-        let redBall = new THREE.TextureLoader().load( 'textures/redball2.jpg' );
-        redBall.wrapS = THREE.RepeatWrapping;
-        redBall.wrapT = THREE.RepeatWrapping;
-        redBall.repeat.set( 1, 1 );
-        const geometry = new THREE.SphereGeometry( .5, 32, 32 );
-        const redBallMaterial = new THREE.MeshLambertMaterial( {map: redBall} );
-        const ballMesh = new THREE.Mesh( geometry, redBallMaterial );
-        ballMesh.castShadow = true;
-        ballMesh.receiveShadow = true;
-
+        let ballMesh = new objectBuilder.redBall({radius: .5, widthSegments: 32, heightSegments: 32}, serverMesh.position, serverMesh.quaternion);
         serverShapeMap[serverMesh.uuid] = ballMesh.uuid;
-        ballMesh.position.copy(serverMesh.position);
-        const serverQuaternion = serverMesh.quaternion;
-        serverQuaternion.x = serverQuaternion._x;
-        serverQuaternion.y = serverQuaternion._y;
-        serverQuaternion.z = serverQuaternion._z;
-        serverQuaternion.w = serverQuaternion._w;
-        ballMesh.quaternion.copy(serverMesh.quaternion);
         currentGame.scene.add(ballMesh);
       }
     });
@@ -225,4 +190,10 @@ module.exports = {
       }
     }
   },
+  stepClientPhysics: function stepClientPhysics() {
+    const camera = currentGame.camera;
+    const scene = currentGame.scene;
+
+
+  }
 };

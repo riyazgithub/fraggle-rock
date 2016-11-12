@@ -74,7 +74,7 @@ const startPhysics = function startPhysics(io) {
     context.ballMeshes.forEach(function(mesh) {
       ballMeshes.push({uuid: mesh.uuid, position: mesh.position, quaternion: mesh.quaternion})
     })
-    io.to(context.guid).emit('physicsUpdate', {boxMeshes: context.boxMeshes, ballMeshes: ballMeshes})
+    io.to(context.guid).emit('physicsUpdate', {boxMeshes: context.boxMeshes, ballMeshes: ballMeshes, players: context.clients})
   }, this.physicsEmitTick)
 };
 
@@ -87,7 +87,6 @@ const shootBall = function shootBall(camera) {
   const material = new THREE.MeshBasicMaterial( {color: 'red'} );
   const ballMesh = new THREE.Mesh( geometry, material );
 
-  // currentGame.scene.add(ballMesh);
   this.ballMeshes.push(ballMesh);
   
   const ballBody = new CANNON.Body({ mass: 10 });

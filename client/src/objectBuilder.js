@@ -22,6 +22,10 @@ const initPosition = function initPosition(mesh, position, quaternion) {
     mesh.position.copy(position);
   }
   if (quaternion) {
+    quaternion.w = quaternion._w;
+    quaternion.x = quaternion._x;
+    quaternion.y = quaternion._y;
+    quaternion.z = quaternion._z;
     mesh.quaternion.copy(quaternion);
   }
 }
@@ -75,6 +79,15 @@ module.exports = {
     initPosition(mesh, position, quaternion);
     mesh.userData.name = 'ancientCrate';
     mesh.userData.mass = volumeOf(size);
+    return mesh;
+  },
+  playerModel: function(position, quaternion) {
+    const geometry = new THREE.BoxGeometry(1, 1, 1);
+    const material = new THREE.MeshBasicMaterial({ color: 'red' });
+    const mesh = new THREE.Mesh(geometry, material);
+    initPosition(mesh, position, quaternion);
+    addShadow(mesh);
+    mesh.userData.name = 'playerModel';
     return mesh;
   }
 }

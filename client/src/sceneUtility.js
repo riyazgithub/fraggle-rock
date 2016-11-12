@@ -135,16 +135,8 @@ module.exports = {
         currentGame.scene.remove(oldShape);
         delete remoteClients[clientPosition.uuid];
       }
-      // Green Square
-      const geometry = new THREE.BoxGeometry(1, 1, 1);
-      const material = new THREE.MeshBasicMaterial({ color: clientPosition.color });
-      const mesh = new THREE.Mesh(geometry, material);
-      mesh.position.x = clientPosition.x;
-      mesh.position.y = clientPosition.y;
-      mesh.position.z = clientPosition.z;
-      mesh.rotation.x = clientPosition.rx;
-      mesh.rotation.y = clientPosition.ry;
-      mesh.rotation.z = clientPosition.rz;
+      const mesh = objectBuilder.playerModel(clientPosition.position, clientPosition.quaternion);
+
       currentGame.scene.add(mesh);
       remoteClients[clientPosition.uuid] = mesh;
     }
@@ -152,6 +144,7 @@ module.exports = {
   loadPhysicsUpdate: function loadPhysicsUpdate(meshObject) {
     const boxMeshes = meshObject.boxMeshes;
     const ballMeshes = meshObject.ballMeshes;
+    const serverClients = meshObject.players;
     boxMeshes.forEach((serverMesh) => {
       let localMesh;
       currentGame.scene.children.forEach((mesh) => {
@@ -172,10 +165,6 @@ module.exports = {
         const serverPosition = serverMesh.position;
         const serverQuaternion = serverMesh.quaternion;
         const serverType = serverMesh.type;
-        serverQuaternion.x = serverQuaternion._x;
-        serverQuaternion.y = serverQuaternion._y;
-        serverQuaternion.z = serverQuaternion._z;
-        serverQuaternion.w = serverQuaternion._w;
         const boxMesh = objectBuilder[serverType](serverGeometry, serverPosition, serverQuaternion)
         serverShapeMap[serverMesh.uuid] = boxMesh.uuid;
         currentGame.scene.add(boxMesh);
@@ -197,7 +186,6 @@ module.exports = {
         serverQuaternion.w = serverQuaternion._w;
         localMesh.quaternion.copy(serverMesh.quaternion);
       } else {
-
         let redBall = new THREE.TextureLoader().load( 'textures/redball.png' );
         redBall.wrapS = THREE.RepeatWrapping;
         redBall.wrapT = THREE.RepeatWrapping;
@@ -219,5 +207,10 @@ module.exports = {
         currentGame.scene.add(ballMesh);
       }
     });
+    for (var key in serverClients) {
+      if (key !== currentGame.camera.uuid) {
+        module.exports.loadClientUpdate(serverClients[key]);
+      }
+    }
   },
 };

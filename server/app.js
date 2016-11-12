@@ -36,9 +36,8 @@ io.on('connection', (socket) => {
     socket.on('shootBall', function(camera) {
       match.shootBall(camera);
     });
-    socket.on('clientUpdate', function (clientPosition) { // listener for client position updates
-      io.to(match.guid).emit('clientUpdate', clientPosition); // re-emit to other clients
-      match.loadClientUpdate(clientPosition); // update server's copy of client position
+    socket.on('clientUpdate', function (camera) { // listener for client position updates
+      match.loadClientUpdate(camera); // update server's copy of client position
     });
     socket.on('disconnect', function (e) {
       matchController.deleteMatch(match.guid);
@@ -52,7 +51,6 @@ io.on('connection', (socket) => {
       match.shootBall(camera);
     });
     socket.on('clientUpdate', function (clientPosition) { // listener for client position updates
-      io.to(match.guid).emit('clientUpdate', clientPosition); // re-emit to other clients
       match.loadClientUpdate(clientPosition); // update server's copy of client position
     });
   });

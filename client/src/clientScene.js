@@ -5,7 +5,7 @@ const levelBuilder = new LevelBuilder();
 const rendererBuilder = require('./rendererBuilder');
 const cameraBuilder = require('./cameraBuilder');
 let serverUpdateTick;
-const serverUpdateInterval = 30;
+const serverUpdateInterval = 1/60*1000;
 
 const appendRenderer = function appendRenderer(renderer) {
   document.querySelector('body').appendChild(renderer.domElement);

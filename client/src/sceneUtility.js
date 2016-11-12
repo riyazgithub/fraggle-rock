@@ -156,6 +156,7 @@ module.exports = {
     latestServerUpdate = meshObject;
   },
   loadPhysicsUpdate: function loadPhysicsUpdate(meshObject) {
+    meshObject = JSON.parse(meshObject);
     const boxMeshes = meshObject.boxMeshes;
     const ballMeshes = meshObject.ballMeshes;
     const serverClients = meshObject.players;

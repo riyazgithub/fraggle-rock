@@ -87,7 +87,7 @@ const startPhysics = function startPhysics(io) {
     context.ballMeshes.forEach(function(mesh) {
       ballMeshes.push({uuid: mesh.uuid, position: mesh.position, quaternion: mesh.quaternion, mass: mesh.userData.mass})
     })
-    io.to(context.guid).emit('physicsUpdate', {boxMeshes: context.boxMeshes, ballMeshes: ballMeshes, players: context.clients})
+    io.to(context.guid).emit('physicsUpdate', JSON.stringify({boxMeshes: context.boxMeshes, ballMeshes: ballMeshes, players: context.clients}))
   }, this.physicsEmitTick)
 };
 

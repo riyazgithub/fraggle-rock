@@ -4,12 +4,12 @@
   "description": "3D Shooter came (Tactical)",
   "main": "index.js",
   "scripts": {
-    "build": "webpack",
+    "build": "webpack --progress --colors --watch",
     "start": "node ./server/app.js",
     "start-dev": "nodemon ./server/app.js",
     "test": "npm run test:server",
     "test:server": "ls"
-  },
+},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/riyazgithub/fraggle-rock.git"

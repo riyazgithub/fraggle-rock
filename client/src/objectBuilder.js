@@ -118,3 +118,98 @@ module.exports = {
     return ballMesh;
   }
 }
+
+// //Side Panel +z
+// let futureTile = new THREE.TextureLoader().load( 'textures/futuretile.jpg' );
+// futureTile.wrapS = THREE.RepeatWrapping;
+// futureTile.wrapT = THREE.RepeatWrapping;
+// futureTile.repeat.set( 15, 2.5/3 );
+// geometry = new THREE.BoxGeometry(45, 0.1, 2.5);
+// material = new THREE.MeshLambertMaterial({ map: futureTile,  transparent: true, opacity: .5  });
+// mesh = new THREE.Mesh(geometry, material);
+// mesh.position.y = 0.5;
+// mesh.position.x = 0;
+// mesh.position.z = 23.5;
+// mesh.receiveShadow = true;
+// mesh.rotation.x = - Math.PI / 6;
+// scene.add(mesh);
+
+// //Side Panel -z
+// futureTile = new THREE.TextureLoader().load( 'textures/futuretile.jpg' );
+// futureTile.wrapS = THREE.RepeatWrapping;
+// futureTile.wrapT = THREE.RepeatWrapping;
+// futureTile.repeat.set( 15, 2.5/3 );
+// geometry = new THREE.BoxGeometry(45, 0.1, 2.5);
+// material = new THREE.MeshPhongMaterial({ map: futureTile,  transparent: true, opacity: .5 });
+// mesh = new THREE.Mesh(geometry, material);
+// mesh.position.y = 0.5;
+// mesh.position.x = 0;
+// mesh.position.z = -23.5;
+// mesh.receiveShadow = true;
+// mesh.rotation.x = Math.PI / 6;
+// scene.add(mesh);
+
+// //Score Board
+// let openEnded = false;
+// let height = 10;
+// geometry = new THREE.CylinderGeometry(.1, .1, height, 10, 10, openEnded);
+// material = new THREE.MeshLambertMaterial({ color: new THREE.Color( 0x0e1c33 )  });
+// mesh = new THREE.Mesh(geometry, material);
+// mesh.position.x = -22.5;
+// mesh.position.z = -2;
+// mesh.position.y = height/2 - .2;
+// scene.add(mesh);
+
+// openEnded = false;
+// height = 10;
+// geometry = new THREE.CylinderGeometry(.1, .1, height, 10, 10, openEnded);
+// material = new THREE.MeshLambertMaterial({ color: new THREE.Color( 0x0e1c33 )  });
+// mesh = new THREE.Mesh(geometry, material);
+// mesh.position.x = -22.5;
+// mesh.position.z = 2;
+// mesh.position.y = height/2 - .2;
+// scene.add(mesh);
+
+// futureTile = new THREE.TextureLoader().load( 'textures/scoreboard.png' );
+// // futureTile.wrapS = THREE.RepeatWrapping;
+// // futureTile.wrapT = THREE.RepeatWrapping;
+// // futureTile.repeat.set( 9/4 , 1 );
+// geometry = new THREE.BoxGeometry(9, 0.1, 4);
+// material = new THREE.MeshPhongMaterial({ map: futureTile,  transparent: true, opacity: 1 });
+// mesh = new THREE.Mesh(geometry, material);
+// mesh.position.y = 7.5;
+// mesh.position.x = -22.3;
+// mesh.receiveShadow = true;
+// mesh.rotation.x = - Math.PI / 2;
+// mesh.rotation.z = Math.PI / 2;
+// scene.add(mesh);
+
+// var loader = new THREE.FontLoader();
+// let font = loader.load( 'Arial_Regular.json', function(font) {
+//   geometry = new THREE.TextGeometry("5", { font: font, size: 1.3, height: .06, curveSegments: 3})
+//   material = new THREE.MeshPhongMaterial({ color: 'yellow',  transparent: true, opacity: 1  });
+//   mesh = new THREE.Mesh(geometry, material);
+//   mesh.position.x = -22.3;
+//   mesh.position.y = 6.3;
+//   mesh.position.z = 2.9;
+//   mesh.rotation.y = Math.PI / 2;
+//   scene.add(mesh);
+
+//   geometry = new THREE.TextGeometry("5", { font: font, size: 1.3, height: .06, curveSegments: 3})
+//   material = new THREE.MeshPhongMaterial({ color: 'yellow',  transparent: true, opacity: 1  });
+//   mesh = new THREE.Mesh(geometry, material);
+//   mesh.position.x = -22.3;
+//   mesh.position.y = 6.3;
+//   mesh.position.z = -1.9;
+//   mesh.rotation.y = Math.PI / 2;
+//   scene.add(mesh);
+
+//   geometry = new THREE.TextGeometry("2:51", { font: font, size: .8, height: .06, curveSegments: 3})
+//   material = new THREE.MeshPhongMaterial({ color: 'yellow',  transparent: true, opacity: 1  });
+//   mesh = new THREE.Mesh(geometry, material);
+//   mesh.position.x = -22.3;
+//   mesh.position.y = 8.3;
+//   mesh.position.z = 1.1;
+//   mesh.rotation.y = Math.PI / 2;
+//   scene.add(mesh);
+// });

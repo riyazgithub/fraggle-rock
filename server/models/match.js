@@ -72,7 +72,7 @@ const startPhysics = function startPhysics(io) {
   this.physicsEmitClock = setInterval(function() {
     const ballMeshes = [];
     context.ballMeshes.forEach(function(mesh) {
-      ballMeshes.push({uuid: mesh.uuid, position: mesh.position, quaternion: mesh.quaternion})
+      ballMeshes.push({uuid: mesh.uuid, position: mesh.position, quaternion: mesh.quaternion, mass: mesh.userData.mass})
     })
     io.to(context.guid).emit('physicsUpdate', {boxMeshes: context.boxMeshes, ballMeshes: ballMeshes, players: context.clients})
   }, this.physicsEmitTick)
@@ -83,7 +83,7 @@ const shootBall = function shootBall(camera) {
   let x = camera.position.x;
   let y = camera.position.y;
   let z = camera.position.z;
-  const geometry = new THREE.SphereGeometry( .5, 32, 32 );
+  const geometry = new THREE.SphereGeometry( 0.5, 32, 32 );
   const material = new THREE.MeshBasicMaterial( {color: 'red'} );
   const ballMesh = new THREE.Mesh( geometry, material );
 
@@ -96,12 +96,13 @@ const shootBall = function shootBall(camera) {
   this.balls.push(ballBody);
 
   const shootDirection = camera.direction;
-  ballBody.velocity.set(  shootDirection.x * 100, shootDirection.y * 100, shootDirection.z * 100);
+  ballBody.velocity.set(shootDirection.x * 125, shootDirection.y * 125, shootDirection.z * 125);
   x += shootDirection.x * 2;
   y += shootDirection.y * 2;
   z += shootDirection.z * 2;
   ballBody.position.set(x,y,z);
   ballMesh.position.set(x,y,z);
+  ballMesh.userData.mass = 10;
 };
 
 const loadFullScene = function loadFullScene(scene) {
@@ -147,21 +148,21 @@ const loadFullScene = function loadFullScene(scene) {
       matrix.fromArray(mesh.matrix);
       position.setFromMatrixPosition(matrix);
       quaternion.fromArray(mesh.matrix);
-      let width = meshGeometry.width;
-      let height = meshGeometry.height;
-      let depth = meshGeometry.depth;
-      let cannonPosition = new CANNON.Vec3(position.x, position.y, position.z);
-      let cannonQuat = new CANNON.Quaternion(quaternion.x, quaternion.y, quaternion.z, quaternion.w);
-      let cannonSize = new CANNON.Vec3(width/2, height/2, depth/2); 
-      let cannonBox = new CANNON.Box(cannonSize);
-      let cannonBody = new CANNON.Body({mass: mesh.userData.mass});
+      const width = meshGeometry.width;
+      const height = meshGeometry.height;
+      const depth = meshGeometry.depth;
+      const cannonPosition = new CANNON.Vec3(position.x, position.y, position.z);
+      const cannonQuat = new CANNON.Quaternion(quaternion.x, quaternion.y, quaternion.z, quaternion.w);
+      const cannonSize = new CANNON.Vec3(width/2, height/2, depth/2); 
+      const cannonBox = new CANNON.Box(cannonSize);
+      const cannonBody = new CANNON.Body({mass: mesh.userData.mass});
       cannonBody.addShape(cannonBox);
       cannonBody.position = cannonPosition;
       cannonBody.quaternion = cannonQuat;
       cannonBody.linearDamping = 0.01;
       cannonBody.angularDamping = 0.01;
-
-      context.boxMeshes.push({uuid: mesh.uuid, position, quaternion, geometry: {width, height, depth}, type: mesh.userData.name});
+      
+      context.boxMeshes.push({uuid: mesh.uuid, position, quaternion, geometry: {width, height, depth}, type: mesh.userData.name, mass: mesh.userData.mass});
       context.boxes.push(cannonBody);
       world.add(cannonBody);
     }

@@ -193,7 +193,5 @@ module.exports = {
   stepClientPhysics: function stepClientPhysics() {
     const camera = currentGame.camera;
     const scene = currentGame.scene;
-
-
   }
 };

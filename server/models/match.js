@@ -22,7 +22,7 @@ module.exports = function Match() {
   this.physicsEmitClock;
   this.physicsEmitTick = 20; //period between physics emits
   this.physicsClock;
-  this.physicsTick = 1/100*1000;
+  this.physicsTick = 1/200*1000;
 };
 
 const loadClientUpdate = function loadClientUpdate(clientPosition) {

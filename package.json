@@ -6,6 +6,7 @@
   "scripts": {
     "build": "webpack",
     "start": "node ./server/app.js",
+    "start-dev": "nodemon ./server/app.js",
     "test": "npm run test:server",
     "test:server": "ls"
   },

@@ -65,6 +65,18 @@ const startPhysics = function startPhysics(io) {
 
       boxMesh.position.copy(box.position);
       boxMesh.quaternion.copy(box.quaternion);
+      if (boxMesh.position.x > 200 || boxMesh.position.y > 200 || boxMesh.position.z > 200) {
+        expiredBoxIndices.push(i);
+      }
+    }
+    if (expiredBoxIndices.length > 0) {
+      console.log('Deleted out of bounds box!');
+      let offset = 0;
+      expiredBoxIndices.forEach(function(index) {
+        context.boxMeshes.splice(index - offset, 1);
+        context.boxes.splice(index - offset, 1);
+        offset--;
+      });
     }
 
   }, this.physicsTick)

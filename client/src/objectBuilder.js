@@ -1,9 +1,5 @@
 const THREE = require('three');
 
-const BoxGeometry = function BoxGeometry(size) {
-  return new THREE.BoxGeometry(size.width, size.height, size.depth);
-};
-
 const LoadTexture = function LoadTexture(texturePath) {
   return new THREE.TextureLoader().load(texturePath);
 };
@@ -11,6 +7,29 @@ const LoadTexture = function LoadTexture(texturePath) {
 const MeshLambertMaterial = function MeshLambertMaterial(texturePath) {
   return new THREE.MeshLambertMaterial({map: LoadTexture(texturePath)})
 };
+const RedBall = function RedBall() {
+  const redBall = new THREE.TextureLoader().load( 'textures/redball2.jpg' );
+  redBall.wrapS = THREE.RepeatWrapping;
+  redBall.wrapT = THREE.RepeatWrapping;
+  redBall.repeat.set( 1, 1 );
+  return redBall;
+}
+const redBallMaterial = new THREE.MeshLambertMaterial( {map: RedBall()} );
+const playerMaterial = new THREE.MeshPhongMaterial({ color: 'red' });
+const metalCrateMaterial = MeshLambertMaterial('textures/metalcratesm.jpg');
+const questionCrateMaterial = MeshLambertMaterial('textures/questioncrate.jpg');
+const woodCrateMaterial = MeshLambertMaterial('textures/woodcratesm.jpg');
+const ancientCrateMaterial = MeshLambertMaterial('textures/ancientcrate.jpg');
+
+
+
+
+
+
+const BoxGeometry = function BoxGeometry(size) {
+  return new THREE.BoxGeometry(size.width, size.height, size.depth);
+};
+
 
 const addShadow = function addShadow(mesh) {
   mesh.castShadow = true;
@@ -50,7 +69,7 @@ module.exports = {
     return mesh;
   },
   metalCrate: function(size, position, quaternion) {
-    const mesh = new THREE.Mesh(BoxGeometry(size), MeshLambertMaterial('textures/metalcratesm.jpg'));
+    const mesh = new THREE.Mesh(BoxGeometry(size), metalCrateMaterial);
     addShadow(mesh);
     initPosition(mesh, position, quaternion);
     mesh.userData.name = 'metalCrate';
@@ -58,7 +77,7 @@ module.exports = {
     return mesh;
   },
   questionCrate: function(size, position, quaternion) {
-    const mesh = new THREE.Mesh(BoxGeometry(size), MeshLambertMaterial('textures/questioncrate.jpg'));
+    const mesh = new THREE.Mesh(BoxGeometry(size), questionCrateMaterial);
     addShadow(mesh);
     initPosition(mesh, position, quaternion);
     mesh.userData.name = 'questionCrate';
@@ -66,7 +85,7 @@ module.exports = {
     return mesh;
   },
   woodCrate: function(size, position, quaternion) {
-    const mesh = new THREE.Mesh(BoxGeometry(size), MeshLambertMaterial('textures/woodcratesm.jpg'));
+    const mesh = new THREE.Mesh(BoxGeometry(size), woodCrateMaterial);
     addShadow(mesh);
     initPosition(mesh, position, quaternion);
     mesh.userData.name = 'woodCrate';
@@ -74,7 +93,7 @@ module.exports = {
     return mesh;
   },
   ancientCrate: function(size, position, quaternion) {
-    const mesh = new THREE.Mesh(BoxGeometry(size), MeshLambertMaterial('textures/ancientcrate.jpg'));
+    const mesh = new THREE.Mesh(BoxGeometry(size), ancientCrateMaterial);
     addShadow(mesh);
     initPosition(mesh, position, quaternion);
     mesh.userData.name = 'ancientCrate';
@@ -83,11 +102,19 @@ module.exports = {
   },
   playerModel: function(position, quaternion) {
     const geometry = new THREE.BoxGeometry(1, 1, 1);
-    const material = new THREE.MeshBasicMaterial({ color: 'red' });
-    const mesh = new THREE.Mesh(geometry, material);
+    const mesh = new THREE.Mesh(geometry, playerMaterial);
     initPosition(mesh, position, quaternion);
     addShadow(mesh);
     mesh.userData.name = 'playerModel';
     return mesh;
+  },
+  redBall: function(size, position, quaternion) {
+    let redBall = redBall;
+    const geometry = new THREE.SphereGeometry( size.radius, size.widthSegments, size.heightSegments );
+    const ballMesh = new THREE.Mesh( geometry, redBallMaterial );
+    addShadow(ballMesh);
+    initPosition(ballMesh, position, quaternion);
+    ballMesh.userData.name = 'redBall';
+    return ballMesh;
   }
 }

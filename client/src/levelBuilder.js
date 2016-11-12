@@ -5,24 +5,39 @@ const lights = new THREE.AmbientLight(0x111111);
 
 
 const buildLevelOne = function buildLevelOne() {
-const scene = this.buildBlankLevelOne();
+  const scene = this.buildBlankLevelOne();
 
-let mesh = objectBuilder.metalCrate({width: 3, height: 3, depth: 3}, {x: 5, y: 10, z: -5});
-scene.add(mesh);
+  let mesh = objectBuilder.metalCrate({width: 4, height: 4, depth: 4}, {x: 5, y: 10, z: -5});
+  scene.add(mesh);
 
-mesh = objectBuilder.questionCrate({width: 3, height: 3, depth: 3}, {x: 0, y: 10, z: -5})
-scene.add(mesh);
+  mesh = objectBuilder.questionCrate({width: 4, height: 4, depth: 4}, {x: 0, y: 10, z: -5})
+  scene.add(mesh);
 
-mesh = objectBuilder.woodCrate({width: 3, height: 3, depth: 3}, {x: 0, y: 10, z: 5});
-scene.add(mesh);
+  mesh = objectBuilder.woodCrate({width: 4, height: 4, depth: 4}, {x: 0, y: 10, z: 5});
+  scene.add(mesh);
 
-mesh = objectBuilder.ancientCrate({width: 3, height: 3, depth: 3}, {x: 0, y: 10, z: 10});
-scene.add(mesh);
+  mesh = objectBuilder.ancientCrate({width: 4, height: 4, depth: 4}, {x: 0, y: 10, z: 10});
+  scene.add(mesh);
 
-mesh = objectBuilder.grassFloor({width: 100, height: 3, depth: 100}, {x: 0, y: -2.5, z: 0});
-scene.add(mesh);
+  mesh = objectBuilder.grassFloor({width: 100, height: 4, depth: 100}, {x: 0, y: -2.5, z: 0});
+  scene.add(mesh);
 
-return scene;
+
+  //RANDOM SHAPE GENERATOR
+  const random = function random(low, high) {
+    return Math.floor(Math.random()*(high - low + 1)) + low;
+  }
+  for (var i = 0; i < 75; i++) {
+    const types = ['metalCrate', 'questionCrate', 'woodCrate', 'ancientCrate'];
+    const size = random(1, 5);
+    const x = random(-40, 40);
+    const y = random(5, 30);
+    const z = random(-40, 40);
+    const type = random(0, types.length - 1);
+    mesh = objectBuilder[types[type]]({width: size, height: size, depth: size}, {x, y, z});
+    scene.add(mesh);
+  }
+  return scene;
 }
 
 const buildBlankLevelOne = function buildBlankLevelOne() {

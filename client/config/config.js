@@ -2,5 +2,5 @@
 
 module.exports = {
   throttleLimit: 3,
-  throttleTime: 5000,
+  throttleTime: 100,
 };

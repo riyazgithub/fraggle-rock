@@ -135,7 +135,7 @@ const loadFullScene = function loadFullScene(scene) {
   solver.tolerance = 0.1;
   world.solver = new CANNON.SplitSolver(solver);
 
-  world.gravity.set(0,-20,0);
+  world.gravity.set(0,-98,0);
   world.broadphase = new CANNON.NaiveBroadphase();
 
   // Create a slippery material (friction coefficient = 0.0)

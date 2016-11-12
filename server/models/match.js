@@ -168,7 +168,7 @@ const loadFullScene = function loadFullScene(scene) {
       const depth = meshGeometry.depth;
       const cannonPosition = new CANNON.Vec3(position.x, position.y, position.z);
       const cannonQuat = new CANNON.Quaternion(quaternion.x, quaternion.y, quaternion.z, quaternion.w);
-      const cannonSize = new CANNON.Vec3(width/2, height/2, depth/2);
+      const cannonSize = new CANNON.Vec3(width / 2 + .065, height / 2 + .065, depth / 2 + .065);
       const cannonBox = new CANNON.Box(cannonSize);
       const cannonBody = new CANNON.Body({mass: mesh.userData.mass});
       cannonBody.addShape(cannonBox);

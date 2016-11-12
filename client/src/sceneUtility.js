@@ -131,9 +131,9 @@ module.exports = {
   },
   animate: function animate(game) {
     currentGame = game;
-    requestAnimationFrame(animate.bind(null, game));
     module.exports.stepClientPhysics();
     game.renderer.render(game.scene, game.camera);
+    requestAnimationFrame(animate.bind(null, game));
   },
   loadClientUpdate: function loadClientUpdate(clientPosition) {
     if (currentGame.camera.uuid !== clientPosition.uuid) {
@@ -149,6 +149,7 @@ module.exports = {
     }
   },
   loadPhysicsUpdate: function loadPhysicsUpdate(meshObject) {
+    debugger;
     const boxMeshes = meshObject.boxMeshes;
     const ballMeshes = meshObject.ballMeshes;
     const serverClients = meshObject.players;

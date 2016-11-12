@@ -11,8 +11,8 @@ const addInitialLoadListener = function addInitialLoadListener(socket) {
 
 const addPhysicsUpdateListener = function addPhysicsUpdateListener(socket) {
   socket.on('physicsUpdate', function(meshesObject) {
-    sceneUtility.loadPhysicsUpdate(meshesObject);
-  })
+    sceneUtility.savePhysicsUpdate(meshesObject);
+  });
 }
 
 module.exports = {

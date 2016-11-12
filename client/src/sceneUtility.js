@@ -10,6 +10,7 @@ let yaw = 0;
 let host = false;
 let shootCount = 0;
 let shootTime;
+let latestServerUpdate;
 const serverShapeMap = {};
 
 module.exports = {
@@ -132,6 +133,9 @@ module.exports = {
   animate: function animate(game) {
     currentGame = game;
     module.exports.stepClientPhysics();
+    if(latestServerUpdate) {
+      module.exports.loadPhysicsUpdate(latestServerUpdate);
+    }
     game.renderer.render(game.scene, game.camera);
     requestAnimationFrame(animate.bind(null, game));
   },
@@ -148,8 +152,10 @@ module.exports = {
       remoteClients[clientPosition.uuid] = mesh;
     }
   },
+  savePhysicsUpdate: function(meshObject) {
+    latestServerUpdate = meshObject;
+  },
   loadPhysicsUpdate: function loadPhysicsUpdate(meshObject) {
-    debugger;
     const boxMeshes = meshObject.boxMeshes;
     const ballMeshes = meshObject.ballMeshes;
     const serverClients = meshObject.players;

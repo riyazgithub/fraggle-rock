@@ -49,7 +49,7 @@ const startPhysics = function startPhysics(io) {
       }
     }
     if (expiredBallIndices.length > 0) {
-      console.log('Deleted out of bounds ball!');
+//      console.log('Deleted out of bounds ball!');
       let offset = 0;
       expiredBallIndices.forEach(function(index) {
         context.ballMeshes.splice(index - offset, 1);
@@ -100,8 +100,10 @@ const shootBall = function shootBall(camera) {
   const ballMesh = new THREE.Mesh( geometry, material );
 
   this.ballMeshes.push(ballMesh);
+
   
   const ballBody = new CANNON.Body({ mass: 30 });
+
   const ballShape = new CANNON.Sphere(0.5);
   ballBody.addShape(ballShape);
   this.world.add(ballBody);
@@ -123,7 +125,7 @@ const loadFullScene = function loadFullScene(scene) {
   let world = new CANNON.World();
   world.quatNormalizeSkip = 0;
   world.quatNormalizeFast = false;
-  
+
   const solver = new CANNON.GSSolver();
 
   world.defaultContactMaterial.contactEquationStiffness = 1e9;
@@ -141,7 +143,7 @@ const loadFullScene = function loadFullScene(scene) {
   const physicsContactMaterial = new CANNON.ContactMaterial(physicsMaterial, physicsMaterial, 0.0, 0.3);
   // We must add the contact materials to the world
   world.addContactMaterial(physicsContactMaterial);
-  
+
   // Loop through objects in scene and create copy in CANNON world
   scene.object.children.forEach(function(mesh) {
     if (!mesh.userData || mesh.userData.mass === undefined || mesh.userData.mass < 0) {

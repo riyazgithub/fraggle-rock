@@ -1,5 +1,6 @@
 const THREE = require('three');
 const objectBuilder = require('./objectBuilder');
+const config = require('./../config/config.js')
 
 const remoteClients = {};
 const remoteScene = {};
@@ -7,6 +8,8 @@ let currentGame;
 let pitch = 0;
 let yaw = 0;
 let host = false;
+let shootCount = 0;
+let shootTime;
 const serverShapeMap = {};
 
 module.exports = {
@@ -109,10 +112,21 @@ module.exports = {
   },
   addClickControls: function addClickControls(socketUtility) {
     window.addEventListener('click', () => {
-      socketUtility.emitShootBall({
-        position: currentGame.camera.position,
-        direction: currentGame.camera.getWorldDirection(),
-      });
+      shootCount++;
+      if (shootCount <= config.throttleLimit) {
+        socketUtility.emitShootBall({
+          position: currentGame.camera.position,
+          direction: currentGame.camera.getWorldDirection(),
+        });
+      } else {
+        // set timer for throttle limit and reset
+        shootTime = shootTime || new Date();
+        let currTime = new Date();
+        if(currTime - shootTime > config.throttleTime) {
+          shootCount = 0;
+          shootTime = undefined;
+        }
+      }
     });
   },
   animate: function animate(game) {

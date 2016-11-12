@@ -27,7 +27,7 @@ scene.add(mesh);
 const random = function random(low, high) {
   return Math.floor(Math.random()*(high - low + 1)) + low;
 }
-for (var i = 0; i < 200; i++) {
+for (var i = 0; i < 100; i++) {
   const types = ['metalCrate', 'questionCrate', 'woodCrate', 'ancientCrate'];
   const size = random(1, 5);
   const x = random(-40, 40);

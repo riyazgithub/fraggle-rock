@@ -22,7 +22,7 @@ module.exports = function Match() {
   this.physicsEmitClock;
   this.physicsEmitTick = 20; //period between physics emits
   this.physicsClock;
-  this.physicsTick = 1/150*1000;
+  this.physicsTick = 1/200*1000;
 };
 
 const loadClientUpdate = function loadClientUpdate(clientPosition) {
@@ -108,7 +108,7 @@ const shootBall = function shootBall(camera) {
   this.balls.push(ballBody);
 
   const shootDirection = camera.direction;
-  ballBody.velocity.set(shootDirection.x * 125, shootDirection.y * 125, shootDirection.z * 125);
+  ballBody.velocity.set(shootDirection.x * 200, shootDirection.y * 200, shootDirection.z * 200);
   x += shootDirection.x * 2;
   y += shootDirection.y * 2;
   z += shootDirection.z * 2;

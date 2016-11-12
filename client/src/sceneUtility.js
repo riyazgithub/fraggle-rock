@@ -138,13 +138,12 @@ module.exports = {
     const boxMeshes = meshObject.boxMeshes;
     const ballMeshes = meshObject.ballMeshes;
     const serverClients = meshObject.players;
+    const meshLookup = {};
+    currentGame.scene.children.forEach((mesh) => {
+      meshLookup[mesh.uuid] = mesh;
+    });
     boxMeshes.forEach((serverMesh) => {
-      let localMesh;
-      currentGame.scene.children.forEach((mesh) => {
-        if (serverShapeMap[serverMesh.uuid] === mesh.uuid || serverMesh.uuid === mesh.uuid) {
-          localMesh = mesh;
-        }
-      });
+      let localMesh = meshLookup[serverMesh.uuid] || meshLookup[serverShapeMap[serverMesh.uuid]];
       if (localMesh) {
         localMesh.position.copy(serverMesh.position);
         const serverQuaternion = serverMesh.quaternion;
@@ -164,12 +163,7 @@ module.exports = {
       }
     });
     ballMeshes.forEach((serverMesh) => {
-      let localMesh;
-      currentGame.scene.children.forEach((mesh) => {
-        if (serverShapeMap[serverMesh.uuid] === mesh.uuid) {
-          localMesh = mesh;
-        }
-      });
+      let localMesh = meshLookup[serverMesh.uuid] || meshLookup[serverShapeMap[serverMesh.uuid]];
       if (localMesh) {
         localMesh.position.copy(serverMesh.position);
         const serverQuaternion = serverMesh.quaternion;

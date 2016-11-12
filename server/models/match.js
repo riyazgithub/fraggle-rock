@@ -89,7 +89,7 @@ const shootBall = function shootBall(camera) {
 
   this.ballMeshes.push(ballMesh);
   
-  const ballBody = new CANNON.Body({ mass: 10 });
+  const ballBody = new CANNON.Body({ mass: 20 });
   const ballShape = new CANNON.Sphere(0.5);
   ballBody.addShape(ballShape);
   this.world.add(ballBody);

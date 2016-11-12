@@ -34,50 +34,62 @@ module.exports = {
     let moveBackward;
     let moveRight;
     const onKeyDown = function onKeyDown(event) {
-      switch (event.keyCode) {
-        case 38: // up
-        case 87: // w
-          moveForward = true;
-          break;
-        case 37: // left
-        case 65: // a
-          moveLeft = true; break;
-        case 40: // down
-        case 83: // s
-          moveBackward = true;
-          break;
-        case 39: // right
-        case 68: // d
-          moveRight = true;
-          break;
+      if (event.keyCode === 87 || event.keyCode === 38) {
+        moveForward = true;
       }
+      if (event.keyCode === 65 || event.keyCode === 37) {
+        moveLeft = true;
+      }
+      if (event.keyCode === 83 || event.keyCode === 40) {
+        moveBackward = true;
+      }
+      if (event.keyCode === 68 || event.keyCode === 39) {
+        moveRight = true;
+      }
+
     };
 
     const onKeyUp = function onKeyUp(event) {
-      switch (event.keyCode) {
-        case 38: // up
-        case 87: // w
-          moveForward = false;
-          break;
-        case 37: // left
-        case 65: // a
-          moveLeft = false;
-          break;
-        case 40: // down
-        case 83: // a
-          moveBackward = false;
-          break;
-        case 39: // right
-        case 68: // d
-          moveRight = false;
-          break;
+
+      if (event.keyCode === 87 || event.keyCode === 38) {
+        moveForward = false;
       }
+      if (event.keyCode === 65 || event.keyCode === 37) {
+        moveLeft = false;
+      }
+      if (event.keyCode === 83 || event.keyCode === 40) {
+        moveBackward = false;
+      }
+      if (event.keyCode === 68 || event.keyCode === 39) {
+        moveRight = false;
+      }
+
     };
     const updateCamera = setInterval(() => {
       const direction = camera.getWorldDirection();
       const thetaY = (Math.PI / 2) - Math.atan2(direction.z, direction.x);
       const movePerTick = 0.1;
-      if (moveForward) {
+      if (moveForward && moveLeft) {
+        camera.position.x += movePerTick / Math.sqrt(2) * Math.sin(thetaY);
+        camera.position.z -= movePerTick / Math.sqrt(2) * (-Math.cos(thetaY));
+        camera.position.x -= movePerTick / Math.sqrt(2) * (-Math.cos(thetaY));
+        camera.position.z += movePerTick / Math.sqrt(2) * (-Math.sin(thetaY));
+      } else if (moveForward && moveRight) {
+        camera.position.x += movePerTick / Math.sqrt(2) * Math.sin(thetaY);
+        camera.position.z -= movePerTick / Math.sqrt(2) * (-Math.cos(thetaY));
+        camera.position.x += movePerTick / Math.sqrt(2) * (-Math.cos(thetaY));
+        camera.position.z -= movePerTick / Math.sqrt(2) * (-Math.sin(thetaY));
+      } else if (moveBackward && moveLeft) {
+        camera.position.x -= movePerTick / Math.sqrt(2) * Math.sin(thetaY);
+        camera.position.z += movePerTick / Math.sqrt(2) * (-Math.cos(thetaY));
+        camera.position.x -= movePerTick / Math.sqrt(2) * (-Math.cos(thetaY));
+        camera.position.z += movePerTick / Math.sqrt(2) * (-Math.sin(thetaY));
+      } else if (moveBackward && moveRight) {
+        camera.position.x -= movePerTick / Math.sqrt(2) * Math.sin(thetaY);
+        camera.position.z += movePerTick / Math.sqrt(2) * (-Math.cos(thetaY));
+        camera.position.x += movePerTick / Math.sqrt(2) * (-Math.cos(thetaY));
+        camera.position.z -= movePerTick / Math.sqrt(2) * (-Math.sin(thetaY));
+      } else if (moveForward) {
         camera.position.x += movePerTick * Math.sin(thetaY);
         camera.position.z -= movePerTick * (-Math.cos(thetaY));
       } else if (moveBackward) {
@@ -111,7 +123,7 @@ module.exports = {
       let z = currentGame.camera.position.z;
 
       //ball texture
-      let redBall = new THREE.TextureLoader().load( 'textures/redball.png' );
+      let redBall = new THREE.TextureLoader().load( 'textures/redball2.jpg' );
       redBall.wrapS = THREE.RepeatWrapping;
       redBall.wrapT = THREE.RepeatWrapping;
       redBall.repeat.set( 1, 1 );
@@ -186,7 +198,7 @@ module.exports = {
         serverQuaternion.w = serverQuaternion._w;
         localMesh.quaternion.copy(serverMesh.quaternion);
       } else {
-        let redBall = new THREE.TextureLoader().load( 'textures/redball.png' );
+        let redBall = new THREE.TextureLoader().load( 'textures/redball2.jpg' );
         redBall.wrapS = THREE.RepeatWrapping;
         redBall.wrapT = THREE.RepeatWrapping;
         redBall.repeat.set( 1, 1 );

@@ -1,3 +1,4 @@
+'use strict';
 const CANNON = require('cannon');
 const THREE = require('three');
 
@@ -101,7 +102,7 @@ const shootBall = function shootBall(camera) {
 
   this.ballMeshes.push(ballMesh);
 
-  
+
   const ballBody = new CANNON.Body({ mass: 30 });
 
   const ballShape = new CANNON.Sphere(0.5);
@@ -167,7 +168,7 @@ const loadFullScene = function loadFullScene(scene) {
       const depth = meshGeometry.depth;
       const cannonPosition = new CANNON.Vec3(position.x, position.y, position.z);
       const cannonQuat = new CANNON.Quaternion(quaternion.x, quaternion.y, quaternion.z, quaternion.w);
-      const cannonSize = new CANNON.Vec3(width/2, height/2, depth/2); 
+      const cannonSize = new CANNON.Vec3(width/2, height/2, depth/2);
       const cannonBox = new CANNON.Box(cannonSize);
       const cannonBody = new CANNON.Body({mass: mesh.userData.mass});
       cannonBody.addShape(cannonBox);
@@ -175,7 +176,7 @@ const loadFullScene = function loadFullScene(scene) {
       cannonBody.quaternion = cannonQuat;
       cannonBody.linearDamping = 0.01;
       cannonBody.angularDamping = 0.01;
-      
+
       context.boxMeshes.push({uuid: mesh.uuid, position, quaternion, geometry: {width, height, depth}, type: mesh.userData.name, mass: mesh.userData.mass});
       context.boxes.push(cannonBody);
       world.add(cannonBody);

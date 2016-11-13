@@ -57,13 +57,13 @@ const startPhysics = function startPhysics(io) {
       const movePerTick = .75;
       if (client.up) {
         clientBody.velocity.set(currVelocity.x + movePerTick * client.direction.x, currVelocity.y, currVelocity.z + movePerTick * client.direction.z);
-      } 
+      }
       if (client.down) {
         clientBody.velocity.set(currVelocity.x - movePerTick * client.direction.x, currVelocity.y, currVelocity.z - movePerTick * client.direction.z);
       }
       if (client.right) {
         clientBody.velocity.set(currVelocity.x - movePerTick * client.direction.z, currVelocity.y, currVelocity.z + movePerTick * client.direction.x);
-      } 
+      }
       if (client.left) {
         clientBody.velocity.set(currVelocity.x + movePerTick * client.direction.z, currVelocity.y, currVelocity.z - movePerTick * client.direction.x);
       }
@@ -89,7 +89,7 @@ const startPhysics = function startPhysics(io) {
             regen();
           }, 3000)
         }
-        client.jump = false; 
+        client.jump = false;
       }
     }
     context.world.step(context.physicsTick/1000);

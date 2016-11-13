@@ -192,7 +192,9 @@ module.exports = {
       mesh.userData.mass = 0;
       cb(mesh);
     });
->>>>>>> building scoreboard and side panels. Bug with angles on x axis not rotating.
+  },
+  sky: function() {
+    return sky;
   }
 }
 

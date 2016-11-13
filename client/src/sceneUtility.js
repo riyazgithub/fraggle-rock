@@ -140,6 +140,7 @@ module.exports = {
     requestAnimationFrame(animate.bind(null, game));
   },
   loadClientUpdate: function loadClientUpdate(clientPosition) {
+    clientPosition = JSON.parse(clientPosition);
     if (currentGame.camera.uuid !== clientPosition.uuid) {
       const oldShape = remoteClients[clientPosition.uuid];
       if (oldShape) {

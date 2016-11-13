@@ -31,7 +31,7 @@ module.exports = {
     clientPosition.position = camera.position;
     clientPosition.quaternion = camera.quaternion;
     clientPosition.uuid = camera.uuid;
-    socket.emit('clientUpdate', clientPosition);
+    socket.emit('clientUpdate', JSON.stringify(clientPosition));
   },
   emitShootBall: function emitShootBall(camera) {
     socket.emit('shootBall', camera);

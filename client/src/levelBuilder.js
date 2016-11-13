@@ -47,23 +47,8 @@ sunlight.shadow.camera.bottom = -50;
 
 scene.add(sunlight);
 
-
-//Sky
-let sky = {};
-let imagePrefix = "textures/dawnmountain-";
-let directions  = ["xpos", "xneg", "ypos", "yneg", "zpos", "zneg"];
-let imageSuffix = ".png";
-sky.geometry = new THREE.CubeGeometry( 500, 500, 500 );
-
-let materialArray = [];
-for (let i = 0; i < 6; i++)
-    materialArray.push( new THREE.MeshBasicMaterial({
-        map: new THREE.TextureLoader().load( imagePrefix + directions[i] + imageSuffix ),
-        side: THREE.BackSide
-    }));
-sky.material = new THREE.MeshFaceMaterial( materialArray );
-sky.mesh = new THREE.Mesh( sky.geometry, sky.material );
-scene.add( sky.mesh );
+const sky = objectBuilder.sky();
+scene.add(sky);
 
 return scene;
 }

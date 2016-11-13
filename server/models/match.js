@@ -10,9 +10,7 @@ const getGuid = function getGuid() {
 module.exports = function Match() {
   this.guid = getGuid();
   this.clients = {};
-  this.boxMeshes = [];
   this.boxes = [];
-  this.ballMeshes = [];
   this.balls = [];
   this.world;
   this.loadClientUpdate = loadClientUpdate.bind(this);
@@ -23,7 +21,7 @@ module.exports = function Match() {
   this.physicsEmitClock;
   this.physicsEmitTick = 1/60*1000; //period between physics emits
   this.physicsClock;
-  this.physicsTick = 1/120*1000;
+  this.physicsTick = 1/100*1000;
 };
 
 const loadClientUpdate = function loadClientUpdate(clientPosition) {
@@ -40,12 +38,9 @@ const startPhysics = function startPhysics(io) {
 
     // Update ball positions
     for(var i=0; i<context.balls.length; i++){
-      const ballMesh = context.ballMeshes[i];
       const ball = context.balls[i];
 
-      ballMesh.position.copy(ball.position);
-      ballMesh.quaternion.copy(ball.quaternion);
-      if (ballMesh.position.x > 200 || ballMesh.position.y > 200 || ballMesh.position.z > 200) {
+      if (ball.position.x > 200 || ball.position.y > 200 || ball.position.z > 200) {
         expiredBallIndices.push(i);
       }
     }
@@ -53,7 +48,6 @@ const startPhysics = function startPhysics(io) {
       console.log('Deleted out of bounds ball!');
       let offset = 0;
       expiredBallIndices.forEach(function(index) {
-        context.ballMeshes.splice(index - offset, 1);
         context.balls.splice(index - offset, 1);
         offset--;
       });
@@ -61,12 +55,9 @@ const startPhysics = function startPhysics(io) {
 
     // Update box positions
     for(var i=0; i<context.boxes.length; i++){
-      const boxMesh = context.boxMeshes[i];
       const box = context.boxes[i];
 
-      boxMesh.position.copy(box.position);
-      boxMesh.quaternion.copy(box.quaternion);
-      if (boxMesh.position.x > 200 || boxMesh.position.y > 200 || boxMesh.position.z > 200) {
+      if (box.position.x > 200 || box.position.y > 200 || box.position.z > 200) {
         expiredBoxIndices.push(i);
       }
     }
@@ -74,7 +65,6 @@ const startPhysics = function startPhysics(io) {
       console.log('Deleted out of bounds box!');
       let offset = 0;
       expiredBoxIndices.forEach(function(index) {
-        context.boxMeshes.splice(index - offset, 1);
         context.boxes.splice(index - offset, 1);
         offset--;
       });
@@ -84,28 +74,24 @@ const startPhysics = function startPhysics(io) {
 
 
   this.physicsEmitClock = setInterval(function() {
-    const ballMeshes = [];
-    context.ballMeshes.forEach(function(mesh) {
-      ballMeshes.push({uuid: mesh.uuid, position: mesh.position, quaternion: mesh.quaternion, mass: mesh.userData.mass})
+    const balls = [];
+    const boxes = [];
+    context.balls.forEach(function(ball) {
+      balls.push({uuid: ball.id, position: ball.position, quaternion: ball.quaternion, mass: ball.mass})
     })
-    io.to(context.guid).emit('physicsUpdate', JSON.stringify({boxMeshes: context.boxMeshes, ballMeshes: ballMeshes, players: context.clients}))
+    context.boxes.forEach(function(box) {
+      boxes.push({uuid: box.uuid, position: box.position, quaternion: box.quaternion, geometry: box.userData.geometry, type: box.userData.shapeType, mass: box.mass})
+    })
+    io.to(context.guid).volatile.emit('physicsUpdate', JSON.stringify({boxMeshes: boxes, ballMeshes: balls, players: context.clients}))
   }, this.physicsEmitTick)
 };
 
 const shootBall = function shootBall(camera) {
-
   let x = camera.position.x;
   let y = camera.position.y;
   let z = camera.position.z;
-  const geometry = new THREE.SphereGeometry( 0.5, 32, 32 );
-  const material = new THREE.MeshBasicMaterial( {color: 'red'} );
-  const ballMesh = new THREE.Mesh( geometry, material );
-
-  this.ballMeshes.push(ballMesh);
-
 
   const ballBody = new CANNON.Body({ mass: 30 });
-
   const ballShape = new CANNON.Sphere(0.5);
   ballBody.addShape(ballShape);
   this.world.add(ballBody);
@@ -117,8 +103,6 @@ const shootBall = function shootBall(camera) {
   y += shootDirection.y * 2;
   z += shootDirection.z * 2;
   ballBody.position.set(x,y,z);
-  ballMesh.position.set(x,y,z);
-  ballMesh.userData.mass = 10;
 };
 
 const loadFullScene = function loadFullScene(scene) {
@@ -177,8 +161,9 @@ const loadFullScene = function loadFullScene(scene) {
       cannonBody.quaternion = cannonQuat;
       cannonBody.linearDamping = 0.01;
       cannonBody.angularDamping = 0.01;
+      cannonBody.uuid = mesh.uuid;
+      cannonBody.userData = {shapeType: mesh.userData.name, geometry: {width, height, depth}};
 
-      context.boxMeshes.push({uuid: mesh.uuid, position, quaternion, geometry: {width, height, depth}, type: mesh.userData.name, mass: mesh.userData.mass});
       context.boxes.push(cannonBody);
       world.add(cannonBody);
     }

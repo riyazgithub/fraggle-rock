@@ -170,10 +170,6 @@ module.exports = {
       if (localMesh) {
         localMesh.position.copy(serverMesh.position);
         const serverQuaternion = serverMesh.quaternion;
-        serverQuaternion.x = serverQuaternion._x;
-        serverQuaternion.y = serverQuaternion._y;
-        serverQuaternion.z = serverQuaternion._z;
-        serverQuaternion.w = serverQuaternion._w;
         localMesh.quaternion.copy(serverMesh.quaternion);
       } else {
         const serverGeometry = serverMesh.geometry;
@@ -189,11 +185,6 @@ module.exports = {
       let localMesh = meshLookup[serverMesh.uuid] || meshLookup[serverShapeMap[serverMesh.uuid]];
       if (localMesh) {
         localMesh.position.copy(serverMesh.position);
-        const serverQuaternion = serverMesh.quaternion;
-        serverQuaternion.x = serverQuaternion._x;
-        serverQuaternion.y = serverQuaternion._y;
-        serverQuaternion.z = serverQuaternion._z;
-        serverQuaternion.w = serverQuaternion._w;
         localMesh.quaternion.copy(serverMesh.quaternion);
       } else {
         let ballMesh = new objectBuilder.redBall({radius: .5, widthSegments: 32, heightSegments: 32}, serverMesh.position, serverMesh.quaternion);

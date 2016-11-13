@@ -142,7 +142,6 @@ module.exports = {
   loadClientUpdate: function loadClientUpdate(clientPosition) {
     clientPosition = JSON.parse(clientPosition);
     if (currentGame.camera.uuid !== clientPosition.uuid) {
-      debugger;
       const oldShape = remoteClients[clientPosition.uuid];
       if (oldShape) {
         currentGame.scene.remove(oldShape);

@@ -31,7 +31,7 @@ module.exports = function Match(deleteMatch) {
 
 const loadClientUpdate = function loadClientUpdate(clientPosition) {
   clearTimeout(this.timeout);
-  this.clients[JSON.parse(clientPosition).guid] = clientPosition;
+  this.clients[JSON.parse(clientPosition).uuid] = clientPosition;
   this.timeout = setTimeout(kill, this.timeoutDelay);
 };
 

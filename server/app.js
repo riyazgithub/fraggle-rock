@@ -46,6 +46,9 @@ io.on('connection', (socket) => {
 
   socket.on('addMeToMatch', function (matchId) {
     const match = matchController.getMatch(matchId);
+    if (!match) {
+      return;
+    }
     socket.join(match.guid);
     socket.on('shootBall', function(camera) {
       match.shootBall(camera);

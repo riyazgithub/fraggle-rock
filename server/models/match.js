@@ -47,7 +47,7 @@ const startPhysics = function startPhysics(io) {
     for(var i=0; i<context.balls.length; i++){
       const ball = context.balls[i];
 
-      if (ball.position.x > 200 || ball.position.y > 200 || ball.position.z > 200) {
+      if (Math.abs(ball.position.x) > 200 || Math.abs(ball.position.y) > 200 || Math.abs(ball.position.z) > 200) {
         expiredBallIndices.push(i);
       }
     }
@@ -64,7 +64,7 @@ const startPhysics = function startPhysics(io) {
     for(var i=0; i<context.boxes.length; i++){
       const box = context.boxes[i];
 
-      if (box.position.x > 200 || box.position.y > 200 || box.position.z > 200) {
+      if (Math.abs(box.position.x) > 200 || Math.abs(box.position.y) > 200 || Math.abs(box.position.z) > 200) {
         expiredBoxIndices.push(i);
       }
     }

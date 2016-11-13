@@ -1,13 +1,14 @@
 'use strict';
 const CANNON = require('cannon');
 const THREE = require('three');
+let kill;
 
 const getGuid = function getGuid() {
   const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
   return [0, 0, 0, 0].map(() => chars[Math.floor(Math.random() * chars.length)]).join('');
 };
 
-module.exports = function Match() {
+module.exports = function Match(deleteMatch) {
   this.guid = getGuid();
   this.clients = {};
   this.boxes = [];
@@ -22,10 +23,16 @@ module.exports = function Match() {
   this.physicsEmitTick = 1/60*1000; //period between physics emits
   this.physicsClock;
   this.physicsTick = 1/100*1000;
+  this.connected = true;
+  kill = function() {deleteMatch(this.guid)}.bind(this);
+  this.timeoutDelay = 10000;
+  this.timeout = setTimeout(kill, this.timeoutDelay);
 };
 
 const loadClientUpdate = function loadClientUpdate(clientPosition) {
+  clearTimeout(this.timeout);
   this.clients[JSON.parse(clientPosition).guid] = clientPosition;
+  this.timeout = setTimeout(kill, this.timeoutDelay);
 };
 
 const startPhysics = function startPhysics(io) {
@@ -193,6 +200,7 @@ const loadFullScene = function loadFullScene(scene) {
 };
 
 const shutdown = function shutdown() {
+  clearTimeout(this.timeout);
   clearInterval(this.physicsClock);
   clearInterval(this.physicsEmitClock);
 }

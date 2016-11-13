@@ -21,9 +21,9 @@ module.exports = function Match() {
   this.shootBall = shootBall.bind(this);
   this.shutdown = shutdown.bind(this);
   this.physicsEmitClock;
-  this.physicsEmitTick = 1/30*1000; //period between physics emits
+  this.physicsEmitTick = 1/60*1000; //period between physics emits
   this.physicsClock;
-  this.physicsTick = 1/100*1000;
+  this.physicsTick = 1/120*1000;
 };
 
 const loadClientUpdate = function loadClientUpdate(clientPosition) {
@@ -50,7 +50,7 @@ const startPhysics = function startPhysics(io) {
       }
     }
     if (expiredBallIndices.length > 0) {
-//      console.log('Deleted out of bounds ball!');
+      console.log('Deleted out of bounds ball!');
       let offset = 0;
       expiredBallIndices.forEach(function(index) {
         context.ballMeshes.splice(index - offset, 1);
@@ -133,8 +133,8 @@ const loadFullScene = function loadFullScene(scene) {
   world.defaultContactMaterial.contactEquationStiffness = 1e9;
   world.defaultContactMaterial.contactEquationRelaxation = 4;
 
-  solver.iterations = 7;
-  solver.tolerance = 0.2;
+  solver.iterations = 2;
+  solver.tolerance = 0.5;
   world.solver = new CANNON.SplitSolver(solver);
 
   world.gravity.set(0,-98,0);

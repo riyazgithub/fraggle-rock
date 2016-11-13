@@ -133,7 +133,7 @@ const loadFullScene = function loadFullScene(scene) {
   world.defaultContactMaterial.contactEquationRelaxation = 4;
 
   solver.iterations = 7;
-  solver.tolerance = 0.1;
+  solver.tolerance = 0.2;
   world.solver = new CANNON.SplitSolver(solver);
 
   world.gravity.set(0,-98,0);

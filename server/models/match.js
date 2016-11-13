@@ -82,6 +82,10 @@ const startPhysics = function startPhysics(io) {
 
   }, this.physicsTick)
 
+  const roundPosition(position) {
+    
+  }
+
   this.physicsEmitClock = setInterval(function() {
     const ballMeshes = [];
     context.ballMeshes.forEach(function(mesh) {

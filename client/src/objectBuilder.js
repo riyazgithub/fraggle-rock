@@ -21,11 +21,6 @@ const questionCrateMaterial = MeshLambertMaterial('textures/questioncrate.jpg');
 const woodCrateMaterial = MeshLambertMaterial('textures/woodcratesm.jpg');
 const ancientCrateMaterial = MeshLambertMaterial('textures/ancientcrate.jpg');
 
-
-
-
-
-
 const BoxGeometry = function BoxGeometry(size) {
   return new THREE.BoxGeometry(size.width, size.height, size.depth);
 };

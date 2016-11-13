@@ -31,6 +31,6 @@ module.exports = {
     }
     delete liveMatches[deleteKey];
     count--;
-    // console.log(`Deleting match, there are ${count} open matches.`);
+    console.log(`Deleting match, there are ${count} open matches.`);
   },
 };

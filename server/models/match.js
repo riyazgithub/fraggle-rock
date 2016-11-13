@@ -119,7 +119,7 @@ const shootBall = function shootBall(camera) {
   let y = camera.position.y;
   let z = camera.position.z;
 
-  const ballBody = new CANNON.Body({ mass: 100 });
+  const ballBody = new CANNON.Body({ mass: 300 });
   const ballShape = new CANNON.Sphere(0.5);
   ballBody.addShape(ballShape);
   this.world.add(ballBody);

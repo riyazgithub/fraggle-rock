@@ -21,13 +21,13 @@ module.exports = function Match() {
   this.shootBall = shootBall.bind(this);
   this.shutdown = shutdown.bind(this);
   this.physicsEmitClock;
-  this.physicsEmitTick = 20; //period between physics emits
+  this.physicsEmitTick = 1/30*1000; //period between physics emits
   this.physicsClock;
-  this.physicsTick = 1/150*1000;
+  this.physicsTick = 1/100*1000;
 };
 
 const loadClientUpdate = function loadClientUpdate(clientPosition) {
-  this.clients[clientPosition.guid] = clientPosition;
+  this.clients[JSON.parse(clientPosition).guid] = clientPosition;
 };
 
 const startPhysics = function startPhysics(io) {

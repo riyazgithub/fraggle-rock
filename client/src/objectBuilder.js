@@ -195,6 +195,66 @@ module.exports = {
   },
   sky: function() {
     return sky;
+  },
+  sidePanel: function(size, position, quaternion) {
+    let yquat = new THREE.Quaternion();
+    yquat.setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI / 6);
+    // let zquat = new THREE.Quaternion();
+    // zquat.setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI / 4);
+    // let quat = yquat.multiply(zquat);
+    console.log(yquat)
+    let texture = new THREE.TextureLoader().load( 'textures/futuretile.jpg' );
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping;
+    texture.repeat.set( 15, 2.5/3 );
+    let material = new THREE.MeshLambertMaterial({});
+    let mesh = new THREE.Mesh(BoxGeometry(size), material);
+    initPosition(mesh, position);
+    mesh.userData.name = 'sidePanel';
+    mesh.rotation.x = - Math.PI / 6; //(30degrees)
+    addShadow(mesh);
+    mesh.userData.mass = 0;
+    return mesh;
+  },
+  scoreBoardPole: function(size, position, quaternion) {
+    const material = new THREE.MeshLambertMaterial({ color: new THREE.Color( 0x0e1c33 )  });
+    const cylinder = new THREE.CylinderGeometry(.1, .1, 12, 10, 10, false);
+    let mesh = new THREE.Mesh(cylinder, material);
+    addShadow(mesh);
+    initPosition(mesh, position, quaternion);
+    mesh.userData.name = 'scoreBoardPole';
+    mesh.userData.mass = 0;
+    mesh.rotation.x = - Math.PI / 6; //(30degrees)
+    return mesh;
+  },
+  scoreBoard: function(size, position, quaternion) {
+    let texture = new THREE.TextureLoader().load( 'textures/futuretile.jpg' );
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping;
+    texture.repeat.set( 9/4 , 1 );
+    let material = new THREE.MeshPhongMaterial({ map: texture, transparent: true, opacity: .8  });
+    let mesh = new THREE.Mesh(BoxGeometry(size), material);
+    initPosition(mesh, position, quaternion);
+    mesh.userData.name = 'scoreBoard';
+    addShadow(mesh);
+    mesh.userData.mass = 0;
+    return mesh;
+  },
+  text: function(cb, fontPath, text, color, size, position, quaternion) {
+    const quat = new THREE.Quaternion();
+    quat.setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI / 2);
+    let loader = new THREE.FontLoader();
+    loader.load( fontPath, function(font) {
+      size.font = font;
+      const geometry = new THREE.TextGeometry(text, size);
+      const material = new THREE.MeshPhongMaterial({ color: color,  transparent: true, opacity: 1  });
+      let mesh = new THREE.Mesh(geometry, material);
+      initPosition(mesh, position, quat);
+      mesh.userData.name = 'text';
+      addShadow(mesh);
+      mesh.userData.mass = 0;
+      cb(mesh);
+    });
   }
 }
 

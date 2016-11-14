@@ -140,6 +140,7 @@ module.exports = {
     requestAnimationFrame(animate.bind(null, game));
   },
   loadClientUpdate: function loadClientUpdate(clientPosition) {
+    clientPosition = JSON.parse(clientPosition);
     if (currentGame.camera.uuid !== clientPosition.uuid) {
       const oldShape = remoteClients[clientPosition.uuid];
       if (oldShape) {
@@ -156,6 +157,7 @@ module.exports = {
     latestServerUpdate = meshObject;
   },
   loadPhysicsUpdate: function loadPhysicsUpdate(meshObject) {
+    meshObject = JSON.parse(meshObject);
     const boxMeshes = meshObject.boxMeshes;
     const ballMeshes = meshObject.ballMeshes;
     const serverClients = meshObject.players;
@@ -168,10 +170,6 @@ module.exports = {
       if (localMesh) {
         localMesh.position.copy(serverMesh.position);
         const serverQuaternion = serverMesh.quaternion;
-        serverQuaternion.x = serverQuaternion._x;
-        serverQuaternion.y = serverQuaternion._y;
-        serverQuaternion.z = serverQuaternion._z;
-        serverQuaternion.w = serverQuaternion._w;
         localMesh.quaternion.copy(serverMesh.quaternion);
       } else {
         const serverGeometry = serverMesh.geometry;
@@ -187,11 +185,6 @@ module.exports = {
       let localMesh = meshLookup[serverMesh.uuid] || meshLookup[serverShapeMap[serverMesh.uuid]];
       if (localMesh) {
         localMesh.position.copy(serverMesh.position);
-        const serverQuaternion = serverMesh.quaternion;
-        serverQuaternion.x = serverQuaternion._x;
-        serverQuaternion.y = serverQuaternion._y;
-        serverQuaternion.z = serverQuaternion._z;
-        serverQuaternion.w = serverQuaternion._w;
         localMesh.quaternion.copy(serverMesh.quaternion);
       } else {
         let ballMesh = new objectBuilder.redBall({radius: .5, widthSegments: 32, heightSegments: 32}, serverMesh.position, serverMesh.quaternion);

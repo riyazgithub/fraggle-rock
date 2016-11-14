@@ -21,10 +21,23 @@ const questionCrateMaterial = MeshLambertMaterial('textures/questioncrate.jpg');
 const woodCrateMaterial = MeshLambertMaterial('textures/woodcratesm.jpg');
 const ancientCrateMaterial = MeshLambertMaterial('textures/ancientcrate.jpg');
 
+const sky = (() => {
+  let sky = {};
+  let imagePrefix = "textures/dawnmountain-";
+  let directions  = ["xpos", "xneg", "ypos", "yneg", "zpos", "zneg"];
+  let imageSuffix = ".png";
+  sky.geometry = new THREE.CubeGeometry( 500, 500, 500 );
 
-
-
-
+  let materialArray = [];
+  for (let i = 0; i < 6; i++)
+      materialArray.push( new THREE.MeshBasicMaterial({
+          map: new THREE.TextureLoader().load( imagePrefix + directions[i] + imageSuffix ),
+          side: THREE.BackSide
+      }));
+  sky.material = new THREE.MeshFaceMaterial( materialArray );
+  sky.mesh = new THREE.Mesh( sky.geometry, sky.material );
+  return sky.mesh;
+})();
 
 const BoxGeometry = function BoxGeometry(size) {
   return new THREE.BoxGeometry(size.width, size.height, size.depth);
@@ -116,6 +129,9 @@ module.exports = {
     initPosition(ballMesh, position, quaternion);
     ballMesh.userData.name = 'redBall';
     return ballMesh;
+  },
+  sky: function() {
+    return sky;
   }
 }
 

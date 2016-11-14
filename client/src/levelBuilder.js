@@ -14,12 +14,12 @@ const buildLevelOne = function buildLevelOne() {
   const random = function random(low, high) {
     return Math.floor(Math.random()*(high - low + 1)) + low;
   }
-  for (var i = 0; i < 75; i++) {
+  for (var i = 0; i < 100; i++) {
     const types = ['metalCrate', 'questionCrate', 'woodCrate', 'ancientCrate'];
-    const size = random(1, 5);
-    const x = random(-40, 40);
-    const y = random(5, 30);
-    const z = random(-40, 40);
+    const size = random(2, 8);
+    const x = random(-50, 50);
+    const y = random(5, 40);
+    const z = random(-50, 50);
     const type = random(0, types.length - 1);
     mesh = objectBuilder[types[type]]({width: size, height: size, depth: size}, {x, y, z});
     scene.add(mesh);
@@ -47,23 +47,8 @@ sunlight.shadow.camera.bottom = -50;
 
 scene.add(sunlight);
 
-
-//Sky
-let sky = {};
-let imagePrefix = "textures/dawnmountain-";
-let directions  = ["xpos", "xneg", "ypos", "yneg", "zpos", "zneg"];
-let imageSuffix = ".png";
-sky.geometry = new THREE.CubeGeometry( 500, 500, 500 );
-
-let materialArray = [];
-for (let i = 0; i < 6; i++)
-    materialArray.push( new THREE.MeshBasicMaterial({
-        map: new THREE.TextureLoader().load( imagePrefix + directions[i] + imageSuffix ),
-        side: THREE.BackSide
-    }));
-sky.material = new THREE.MeshFaceMaterial( materialArray );
-sky.mesh = new THREE.Mesh( sky.geometry, sky.material );
-scene.add( sky.mesh );
+const sky = objectBuilder.sky();
+scene.add(sky);
 
 return scene;
 }

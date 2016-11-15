@@ -15,7 +15,7 @@ const RedBall = function RedBall() {
   return redBall;
 }
 const redBallMaterial = new THREE.MeshLambertMaterial( {map: RedBall()} );
-const playerMaterial = new THREE.MeshPhongMaterial({ color: 'red' });
+const playerMaterial = new THREE.MeshLambertMaterial({ color: 'green' });
 const metalCrateMaterial = MeshLambertMaterial('textures/metalcratesm.jpg');
 const questionCrateMaterial = MeshLambertMaterial('textures/questioncrate.jpg');
 const woodCrateMaterial = MeshLambertMaterial('textures/woodcratesm.jpg');
@@ -114,7 +114,7 @@ module.exports = {
     return mesh;
   },
   playerModel: function(position, quaternion) {
-    const geometry = new THREE.BoxGeometry(1, 1, 1);
+    const geometry = new THREE.SphereGeometry(2, 32, 32);
     const mesh = new THREE.Mesh(geometry, playerMaterial);
     initPosition(mesh, position, quaternion);
     addShadow(mesh);

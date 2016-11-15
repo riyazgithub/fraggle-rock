@@ -10,11 +10,13 @@ const getGuid = function getGuid() {
 
 module.exports = function Match(deleteMatch) {
   this.guid = getGuid();
-  this.clients = {};
+  this.clients = {}; // key is client UUID, value is current information about client
+  this.clientToCannon = {}; // key is client UUID, value is cannon body
   this.boxes = [];
   this.balls = [];
   this.world;
   this.loadClientUpdate = loadClientUpdate.bind(this);
+  this.loadNewClient = loadNewClient.bind(this);
   this.loadFullScene = loadFullScene.bind(this);
   this.startPhysics = startPhysics.bind(this);
   this.shootBall = shootBall.bind(this);
@@ -31,7 +33,14 @@ module.exports = function Match(deleteMatch) {
 
 const loadClientUpdate = function loadClientUpdate(clientPosition) {
   clearTimeout(this.timeout);
-  this.clients[JSON.parse(clientPosition).uuid] = clientPosition;
+  clientPosition = JSON.parse(clientPosition);
+  const localClient = this.clients[clientPosition.uuid];
+  localClient.up = clientPosition.up;
+  localClient.left = clientPosition.left;
+  localClient.right = clientPosition.right;
+  localClient.down = clientPosition.down;
+  localClient.direction = clientPosition.direction;
+  localClient.jump = clientPosition.jump;
   this.timeout = setTimeout(kill, this.timeoutDelay);
 };
 
@@ -41,6 +50,48 @@ const startPhysics = function startPhysics(io) {
   this.physicsClock = setInterval(function() {
     const expiredBoxIndices = [];
     const expiredBallIndices = [];
+    for (var key in context.clients) {
+      const client = context.clients[key];
+      const clientBody = context.clientToCannon[client.uuid];
+      const currVelocity = clientBody.velocity;
+      const movePerTick = .75;
+      if (client.up) {
+        clientBody.velocity.set(currVelocity.x + movePerTick * client.direction.x, currVelocity.y, currVelocity.z + movePerTick * client.direction.z);
+      } 
+      if (client.down) {
+        clientBody.velocity.set(currVelocity.x - movePerTick * client.direction.x, currVelocity.y, currVelocity.z - movePerTick * client.direction.z);
+      }
+      if (client.right) {
+        clientBody.velocity.set(currVelocity.x - movePerTick * client.direction.z, currVelocity.y, currVelocity.z + movePerTick * client.direction.x);
+      } 
+      if (client.left) {
+        clientBody.velocity.set(currVelocity.x + movePerTick * client.direction.z, currVelocity.y, currVelocity.z - movePerTick * client.direction.x);
+      }
+      if (client.jump) {
+        if (client.jumps > 0) {
+          clientBody.velocity.set(currVelocity.x, currVelocity.y + 50, currVelocity.z);
+          client.jumps --;
+        }
+        const regen = function regen() {
+          if (this.jumps < 3) {
+            this.jumps++;
+          }
+          console.log(this.jumps);
+          if (this.jumps < 3) {
+            setTimeout(regen.bind(this), 3000)
+          } else {
+            this.jumpRegen = false;
+          }
+        }.bind(client);
+        if (!client.jumpRegen && client.jumps < 3) {
+          client.jumpRegen = true;
+          setTimeout(function() {
+            regen();
+          }, 3000)
+        }
+        client.jump = false; 
+      }
+    }
     context.world.step(context.physicsTick/1000);
 
     // Update ball positions
@@ -133,7 +184,22 @@ const shootBall = function shootBall(camera) {
   ballBody.position.set(x,y,z);
 };
 
-const loadFullScene = function loadFullScene(scene) {
+const loadNewClient = function loadNewClient(player) {
+  const x = player.position.x;
+  const y = player.position.y;
+  const z = player.position.z;
+  const ballBody = new CANNON.Body({ mass: 10 });
+  const ballShape = new CANNON.Sphere(2);
+  ballBody.position.x = x;
+  ballBody.position.y = y;
+  ballBody.position.z = z;
+  ballBody.addShape(ballShape);
+  this.clientToCannon[player.object.uuid] = ballBody;
+  this.clients[player.object.uuid] = {uuid: player.object.uuid, position: ballBody.position, direction: player.direction, up: false, left: false, right: false, down: false, jumps: 3};
+  this.world.add(ballBody);
+};
+
+const loadFullScene = function loadFullScene(scene, player) {
   // Setup our world
   const context = this;
   let world = new CANNON.World();
@@ -197,6 +263,7 @@ const loadFullScene = function loadFullScene(scene) {
     }
   });
   this.world = world;
+  this.loadNewClient(player);
 };
 
 const shutdown = function shutdown() {

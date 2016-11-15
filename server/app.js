@@ -28,9 +28,11 @@ server.listen(process.env.PORT || 9999, () => {
 
 io.on('connection', (socket) => {
 
-  socket.on('fullScene', function (scene) {
+  socket.on('fullScene', function (fullScene) {
+    const scene = fullScene.scene;
+    const player = fullScene.camera;
     const match = matchController.getNewMatch();
-    match.loadFullScene(scene);
+    match.loadFullScene(scene, player);
     match.startPhysics(io);
     socket.join(match.guid);
     socket.on('shootBall', function(camera) {
@@ -44,11 +46,14 @@ io.on('connection', (socket) => {
     })
   });
 
-  socket.on('addMeToMatch', function (matchId) {
+  socket.on('addMeToMatch', function (newMatchRequest) {
+    const matchId = newMatchRequest.matchId;
+    const player = newMatchRequest.player;
     const match = matchController.getMatch(matchId);
     if (!match) {
       return;
     }
+    match.loadNewClient(player);
     socket.join(match.guid);
     socket.on('shootBall', function(camera) {
       match.shootBall(camera);

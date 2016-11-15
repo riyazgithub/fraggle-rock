@@ -14,7 +14,7 @@ const buildLevelOne = function buildLevelOne() {
   const random = function random(low, high) {
     return Math.floor(Math.random()*(high - low + 1)) + low;
   }
-  for (var i = 0; i < 100; i++) {
+  for (var i = 0; i < 20; i++) {
     const types = ['metalCrate', 'questionCrate', 'woodCrate', 'ancientCrate'];
     const size = random(2, 8);
     const x = random(-50, 50);

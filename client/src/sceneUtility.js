@@ -8,8 +8,8 @@ let currentGame;
 let pitch = 0;
 let yaw = 0;
 let host = false;
-let shootCount = 0;
-let shootTime;
+let shotCount = 3;
+let shotRegen = false;
 let latestServerUpdate;
 const serverShapeMap = {};
 
@@ -80,21 +80,31 @@ module.exports = {
   },
   addClickControls: function addClickControls(socketUtility) {
     window.addEventListener('click', () => {
-      shootCount++;
-      if (shootCount <= config.throttleLimit) {
-        socketUtility.emitShootBall({
-          position: currentGame.camera.position,
-          direction: currentGame.camera.getWorldDirection(),
-        });
-      } else {
-        // set timer for throttle limit and reset
-        shootTime = shootTime || new Date();
-        let currTime = new Date();
-        if(currTime - shootTime > config.throttleTime) {
-          shootCount = 0;
-          shootTime = undefined;
-        }
+    if (shotCount > 0) {
+      shotCount--;
+      socketUtility.emitShootBall({
+        position: currentGame.camera.position,
+        direction: currentGame.camera.getWorldDirection(),
+      });
+    }
+    const regen = function regen() {
+      if (shotCount < 3) {
+        shotCount++;
       }
+      if (shotCount < 3) {
+        setTimeout(regen, 1000)
+      } else {
+        shotRegen = false;
+      }
+    };
+    if (!shotRegen && shotCount < 3) {
+      shotRegen = true;
+      setTimeout(function() {
+        regen();
+      }, 1000)
+    }
+
+
     });
   },
   animate: function animate(game) {

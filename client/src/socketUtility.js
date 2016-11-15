@@ -58,6 +58,9 @@ module.exports = {
   emitClientPosition: function emitClientPositon(camera, playerInput) {
     playerInput.direction = camera.getWorldDirection();
     socket.emit('clientUpdate', JSON.stringify(playerInput));
+    if (playerInput.jump) {
+      playerInput.jump = false;
+    }
   },
   emitShootBall: function emitShootBall(camera) {
     socket.emit('shootBall', camera);

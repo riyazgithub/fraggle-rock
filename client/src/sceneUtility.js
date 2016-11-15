@@ -37,6 +37,7 @@ module.exports = {
     playerInput.left = false;
     playerInput.down = false;
     playerInput.right = false;
+    playerInput.jump = false;
     playerInput.uuid = camera.uuid;
     const onKeyDown = function onKeyDown(event) {
       if (event.keyCode === 87 || event.keyCode === 38) {
@@ -50,6 +51,9 @@ module.exports = {
       }
       if (event.keyCode === 68 || event.keyCode === 39) {
         playerInput.right = true;
+      }
+      if (event.keyCode === 32) {
+        playerInput.jump = true;
       }
 
     };

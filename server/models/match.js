@@ -40,6 +40,7 @@ const loadClientUpdate = function loadClientUpdate(clientPosition) {
   localClient.right = clientPosition.right;
   localClient.down = clientPosition.down;
   localClient.direction = clientPosition.direction;
+  localClient.jump = clientPosition.jump;
   this.timeout = setTimeout(kill, this.timeoutDelay);
 };
 
@@ -53,7 +54,7 @@ const startPhysics = function startPhysics(io) {
       const client = context.clients[key];
       const clientBody = context.clientToCannon[client.uuid];
       const currVelocity = clientBody.velocity;
-      const movePerTick = .5;
+      const movePerTick = 1.5;
       if (client.up) {
         clientBody.velocity.set(currVelocity.x + movePerTick * client.direction.x, currVelocity.y, currVelocity.z + movePerTick * client.direction.z);
       } 
@@ -65,7 +66,11 @@ const startPhysics = function startPhysics(io) {
       } 
       if (client.left) {
         clientBody.velocity.set(currVelocity.x + movePerTick * client.direction.z, currVelocity.y, currVelocity.z - movePerTick * client.direction.x);
-      } 
+      }
+      if (client.jump) {
+        clientBody.velocity.set(currVelocity.x, currVelocity.y + 50, currVelocity.z);
+        client.jump = false;  
+      }
     }
     context.world.step(context.physicsTick/1000);
 
@@ -130,7 +135,6 @@ const startPhysics = function startPhysics(io) {
   this.physicsEmitClock = setInterval(function() {
     const balls = [];
     const boxes = [];
-    const client = {};
     context.balls.forEach(function(ball) {
       balls.push({uuid: ball.id, position: roundPosition(ball.position), quaternion: roundQuaternion(ball.quaternion), mass: ball.mass})
     })

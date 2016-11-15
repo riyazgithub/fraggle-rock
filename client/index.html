@@ -2,14 +2,38 @@
 <html>
 <head>
   <title>Smash Ball Brawl</title>
+  <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
+  <link rel='stylesheet' type='text/css' href='style.css'>
+  <script src='https://code.jquery.com/jquery-3.1.1.min.js'></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <link rel="shortcut icon" href="./favicon.jpg" type="image/jpg">
   <link rel="icon" href="./favicon.jpg" type="image/jpg">
 </head>
 <body>
-<div id="testButtons">
-  <button id="joinMatch">start match</button>
-  <button id="joinExisting">Join existing match</button>
-</div>
+  <div id='app'></div>
+
+  <div id="blocker">
+    <div id="instructions">
+      <div class="menu-title"><img src='./textures/logo.png'/></div>
+      <div class="menu"> 
+  		<div>
+        <div class="menu-name">MENU</div>
+  		  <div id="resume" class="resume">PLAY</div>
+  		  <div class='exit'>EXIT</div>
+  		  <div class='menu-descr'> Press Shift in Game to See Menu</div>
+  		</div>
+          </div>
+  		
+  	</div>
+  </div>
+  <script>
+  	var blocker = document.getElementById( 'blocker' );
+  	var instructions = document.getElementById( 'instructions' );
+  	var havePointerLock = 'pointerLockElement' in document;
+  	blocker.style.display = 'none'
+  </script>
+
 </body>
 <script src='/socket.io/socket.io.js'></script>
 <script src='./build/bundle.js'></script>

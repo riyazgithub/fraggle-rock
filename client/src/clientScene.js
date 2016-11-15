@@ -1,3 +1,4 @@
+
 const sceneUtility = require('./sceneUtility');
 const socketUtility = require('./socketUtility');
 const LevelBuilder = require('./levelBuilder');
@@ -9,7 +10,6 @@ const serverUpdateInterval = 1/60*1000;
 
 const appendRenderer = function appendRenderer(renderer) {
   document.querySelector('body').appendChild(renderer.domElement);
-  document.body.requestPointerLock();
 }
 
 const init = function init() {

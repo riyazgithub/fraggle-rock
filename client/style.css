@@ -1,0 +1,118 @@
+#blocker {
+  position: absolute;
+
+  width: 100%;
+  height: 100%;
+}
+
+.menu-title {
+  font-size: 50px;
+  color: white;
+  display: block;
+  margin-top: 8%;
+}
+
+#panel-heading {
+	background-color: rgba(165, 63, 54, 0.8);
+	font-size: 30px;
+	border-radius: 0px;
+  
+}
+.menu-name {
+	font-size: 40px;
+	color: white;
+	padding: 10px;
+}
+.menu {
+	background-color: rgba(165, 63, 54, 0.8);
+	border-radius: 0px;
+	font-size: 23px;
+	display: block;
+	width: 30%;
+	padding: 5px;
+	margin: auto;
+	color: white;
+	font-family: 'Press Start 2P', cursive;
+}
+
+.resume:hover, .exit:hover {
+  color: rgb(211,211,211);
+}
+
+.menu-descr {
+	font-size: 10px;
+	padding: 10px;
+}
+#instructions {
+
+	width: 100%;
+	height: 100%;
+
+	display: -webkit-box;
+	display: -moz-box;
+	display: block;
+
+	-webkit-box-orient: horizontal;
+	-moz-box-orient: horizontal;
+	box-orient: horizontal;
+
+	-webkit-box-pack: center;
+	-moz-box-pack: center;
+	box-pack: center;
+
+	-webkit-box-align: center;
+	-moz-box-align: center;
+	box-align: center;
+
+	text-align: center;
+
+	cursor: pointer;
+
+}
+
+#LogInPageLogo {
+  position: absolute;
+  z-index:-1;
+  left:0px;
+  top:0px;
+  width: 100%;
+  height: 100%;
+}
+
+#Facebook {
+  text-align: center;
+}
+
+#Home {
+	display: none;
+}
+
+#HomePage {
+  text-align: center;
+  width: 100%;
+  height: 100%;
+}
+#HomeTitle {
+  text-align: center;
+}
+
+#HomeBackground {
+  position: absolute;
+  z-index:-1;
+  left:0px;
+  top:0px;
+  width: 100%;
+  height: 100%;
+}
+
+#testButtons {
+	text-align: center;
+}
+
+#joinMatch, #joinExisting {
+	margin-right: 5px;
+}
+
+#LeaderBoard {
+  margin-top: 5px;
+}

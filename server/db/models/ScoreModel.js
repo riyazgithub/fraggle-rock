@@ -13,7 +13,6 @@ const Score = db.define('Score', {
     type: Sequelize.INTEGER,
   },
 });
-
 Score.belongsTo(userModel, { foreignKey: 'user_id' });
 Score.belongsTo(gameModel, { foreignKey: 'game_id' });
 Score.sync();

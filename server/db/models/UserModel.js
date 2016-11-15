@@ -7,6 +7,9 @@ const User = db.define('user', {
     autoIncrement: true,
     primaryKey: true,
   },
+  facebookid: {
+    type: Sequelize.STRING,
+  },
   username: {
     type: Sequelize.STRING,
   },

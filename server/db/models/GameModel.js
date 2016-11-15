@@ -2,6 +2,10 @@ const db = require('../db');
 const Sequelize = require('sequelize');
 const userModel = require('./UserModel')
 
+/*
+{"username":"Riyaz","uuid":"123-qwe-asd"}
+*/
+
 const Game = db.define('Game', {
   id: {
     type: Sequelize.INTEGER,
@@ -10,7 +14,6 @@ const Game = db.define('Game', {
   },
   uuid: {
     type: Sequelize.STRING,
-    primaryKey: true,
   },
 });
 Game.belongsTo(userModel, { foreignKey: 'user_id' });

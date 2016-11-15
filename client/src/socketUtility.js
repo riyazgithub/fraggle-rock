@@ -47,16 +47,15 @@ module.exports = {
     socket.emit('fullScene', fullScene);
     addPhysicsUpdateListener(socket);
   },
-  joinMatch: function joinMatch(matchNumber) {
+  joinMatch: function joinMatch(matchNumber, game) {
     socket = socket || io();
-    socket.emit('addMeToMatch', matchNumber);
+    const player = game.camera.toJSON();
+    player.position = game.camera.position;
+    player.direction = game.camera.getWorldDirection();
+    socket.emit('addMeToMatch', {matchId: matchNumber, player: player});
     addPhysicsUpdateListener(socket);
   },
   emitClientPosition: function emitClientPositon(camera, playerInput) {
-    // const clientPosition = {};
-    // clientPosition.position = roundPosition(camera.position);
-    // clientPosition.quaternion = roundQuaternion(camera.quaternion);
-    // clientPosition.uuid = camera.uuid;
     playerInput.direction = camera.getWorldDirection();
     socket.emit('clientUpdate', JSON.stringify(playerInput));
   },

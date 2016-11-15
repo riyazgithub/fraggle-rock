@@ -70,45 +70,6 @@ module.exports = {
       }
 
     };
-    // const updateCamera = setInterval(() => {
-    //   const direction = camera.getWorldDirection();
-    //   const thetaY = (Math.PI / 2) - Math.atan2(direction.z, direction.x);
-    //   const movePerTick = 0.1;
-    //   if (moveForward && moveLeft) {
-    //     camera.position.x += movePerTick / Math.sqrt(2) * Math.sin(thetaY);
-    //     camera.position.z -= movePerTick / Math.sqrt(2) * (-Math.cos(thetaY));
-    //     camera.position.x -= movePerTick / Math.sqrt(2) * (-Math.cos(thetaY));
-    //     camera.position.z += movePerTick / Math.sqrt(2) * (-Math.sin(thetaY));
-    //   } else if (moveForward && moveRight) {
-    //     camera.position.x += movePerTick / Math.sqrt(2) * Math.sin(thetaY);
-    //     camera.position.z -= movePerTick / Math.sqrt(2) * (-Math.cos(thetaY));
-    //     camera.position.x += movePerTick / Math.sqrt(2) * (-Math.cos(thetaY));
-    //     camera.position.z -= movePerTick / Math.sqrt(2) * (-Math.sin(thetaY));
-    //   } else if (moveBackward && moveLeft) {
-    //     camera.position.x -= movePerTick / Math.sqrt(2) * Math.sin(thetaY);
-    //     camera.position.z += movePerTick / Math.sqrt(2) * (-Math.cos(thetaY));
-    //     camera.position.x -= movePerTick / Math.sqrt(2) * (-Math.cos(thetaY));
-    //     camera.position.z += movePerTick / Math.sqrt(2) * (-Math.sin(thetaY));
-    //   } else if (moveBackward && moveRight) {
-    //     camera.position.x -= movePerTick / Math.sqrt(2) * Math.sin(thetaY);
-    //     camera.position.z += movePerTick / Math.sqrt(2) * (-Math.cos(thetaY));
-    //     camera.position.x += movePerTick / Math.sqrt(2) * (-Math.cos(thetaY));
-    //     camera.position.z -= movePerTick / Math.sqrt(2) * (-Math.sin(thetaY));
-    //   } else if (moveForward) {
-    //     camera.position.x += movePerTick * Math.sin(thetaY);
-    //     camera.position.z -= movePerTick * (-Math.cos(thetaY));
-    //   } else if (moveBackward) {
-    //     camera.position.x -= movePerTick * Math.sin(thetaY);
-    //     camera.position.z += movePerTick * (-Math.cos(thetaY));
-    //   } else if (moveLeft) {
-    //     camera.position.x -= movePerTick * (-Math.cos(thetaY));
-    //     camera.position.z += movePerTick * (-Math.sin(thetaY));
-    //   } else if (moveRight) {
-    //     camera.position.x += movePerTick * (-Math.cos(thetaY));
-    //     camera.position.z -= movePerTick * (-Math.sin(thetaY));
-    //   }
-    // }, 10);
-
     document.addEventListener('keydown', onKeyDown, false);
     document.addEventListener('keyup', onKeyUp, false);
     return playerInput;

@@ -46,11 +46,14 @@ io.on('connection', (socket) => {
     })
   });
 
-  socket.on('addMeToMatch', function (matchId) {
+  socket.on('addMeToMatch', function (newMatchRequest) {
+    const matchId = newMatchRequest.matchId;
+    const player = newMatchRequest.player;
     const match = matchController.getMatch(matchId);
     if (!match) {
       return;
     }
+    match.loadNewClient(player);
     socket.join(match.guid);
     socket.on('shootBall', function(camera) {
       match.shootBall(camera);

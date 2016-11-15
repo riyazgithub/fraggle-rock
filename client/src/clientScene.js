@@ -48,11 +48,11 @@ const joinGame = function joinGame(matchNumber) {
   // load game of this matchNumber
   const game = join(matchNumber);
   sceneUtility.addLookControls(game.camera);
-  sceneUtility.addMoveControls(game.camera);
+  const playerInput = sceneUtility.addMoveControls(game.camera);
   sceneUtility.addClickControls(socketUtility);
   sceneUtility.animate(game);
-  socketUtility.joinMatch(matchNumber);
-  startUpdateTick(game.camera);
+  socketUtility.joinMatch(matchNumber, game);
+  startUpdateTick(game.camera, playerInput);
 };
 
 module.exports = { startGame, joinGame };

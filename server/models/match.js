@@ -16,6 +16,7 @@ module.exports = function Match(deleteMatch) {
   this.balls = [];
   this.world;
   this.loadClientUpdate = loadClientUpdate.bind(this);
+  this.loadNewClient = loadNewClient.bind(this);
   this.loadFullScene = loadFullScene.bind(this);
   this.startPhysics = startPhysics.bind(this);
   this.shootBall = shootBall.bind(this);
@@ -159,6 +160,21 @@ const shootBall = function shootBall(camera) {
   ballBody.position.set(x,y,z);
 };
 
+const loadNewClient = function loadNewClient(player) {
+  const x = player.position.x;
+  const y = player.position.y;
+  const z = player.position.z;
+  const ballBody = new CANNON.Body({ mass: 300 });
+  const ballShape = new CANNON.Sphere(2);
+  ballBody.position.x = x;
+  ballBody.position.y = y;
+  ballBody.position.z = z;
+  ballBody.addShape(ballShape);
+  this.clientToCannon[player.object.uuid] = ballBody;
+  this.clients[player.object.uuid] = {uuid: player.object.uuid, position: ballBody.position, direction: player.direction, up: false, left: false, right: false, down: false};
+  this.world.add(ballBody);
+};
+
 const loadFullScene = function loadFullScene(scene, player) {
   // Setup our world
   const context = this;
@@ -222,21 +238,8 @@ const loadFullScene = function loadFullScene(scene, player) {
       world.add(cannonBody);
     }
   });
-  let x = player.position.x;
-  let y = player.position.y;
-  let z = player.position.z;
-
-  const ballBody = new CANNON.Body({ mass: 300 });
-  const ballShape = new CANNON.Sphere(2);
-  ballBody.position.x = x;
-  ballBody.position.y = y;
-  ballBody.position.z = z;
-  ballBody.addShape(ballShape);
-  this.clientToCannon[player.object.uuid] = ballBody;
-  this.clients[player.object.uuid] = {uuid: player.object.uuid, position: ballBody.position, direction: player.direction, up: false, left: false, right: false, down: false};
-  world.add(ballBody);
-
   this.world = world;
+  this.loadNewClient(player);
 };
 
 const shutdown = function shutdown() {

@@ -7,19 +7,33 @@ const LoadTexture = function LoadTexture(texturePath) {
 const MeshLambertMaterial = function MeshLambertMaterial(texturePath) {
   return new THREE.MeshLambertMaterial({map: LoadTexture(texturePath)})
 };
-const RedBall = function RedBall() {
-  const redBall = new THREE.TextureLoader().load( 'textures/redball2.jpg' );
-  redBall.wrapS = THREE.RepeatWrapping;
-  redBall.wrapT = THREE.RepeatWrapping;
-  redBall.repeat.set( 1, 1 );
-  return redBall;
+
+const futureTile = function(xTile, zTile) {
+  let texture = new THREE.TextureLoader().load( 'textures/futuretile.jpg' );
+  texture.wrapS = THREE.RepeatWrapping;
+  texture.wrapT = THREE.RepeatWrapping;
+  texture.repeat.set(xTile, zTile);
+  return texture;
 }
-const redBallMaterial = new THREE.MeshLambertMaterial( {map: RedBall()} );
+
+const grass = function(xTile, zTile) {
+  const grass = new THREE.TextureLoader().load( 'textures/grass-repeating4.jpg' );
+  grass.wrapS = THREE.RepeatWrapping;
+  grass.wrapT = THREE.RepeatWrapping;
+  grass.repeat.set( xTile, zTile );
+  return grass;
+}
+
+const redBallMaterial = new THREE.MeshLambertMaterial(
+  {map: new THREE.TextureLoader().load( 'textures/redball2.jpg' )} );
 const playerMaterial = new THREE.MeshLambertMaterial({ color: 'green' });
 const metalCrateMaterial = MeshLambertMaterial('textures/metalcratesm.jpg');
 const questionCrateMaterial = MeshLambertMaterial('textures/questioncrate.jpg');
 const woodCrateMaterial = MeshLambertMaterial('textures/woodcratesm.jpg');
 const ancientCrateMaterial = MeshLambertMaterial('textures/ancientcrate.jpg');
+const scoreBoardMaterial = new THREE.MeshPhongMaterial({ map: futureTile(9/4, 1), transparent: true, opacity: .8  });
+const sidePanelMaterial = new THREE.MeshPhongMaterial({ map: futureTile(15, 5/6), transparent: true, opacity: .8  });
+const floorMaterial = new THREE.MeshLambertMaterial({ map: grass(1, 1) });
 
 const sky = (() => {
   let sky = {};
@@ -54,10 +68,10 @@ const initPosition = function initPosition(mesh, position, quaternion) {
     mesh.position.copy(position);
   }
   if (quaternion) {
-    quaternion.w = quaternion._w;
-    quaternion.x = quaternion._x;
-    quaternion.y = quaternion._y;
-    quaternion.z = quaternion._z;
+    quaternion.w = quaternion.w || quaternion._w || 0;
+    quaternion.x = quaternion.x || quaternion._x || 0;
+    quaternion.y = quaternion.y || quaternion._y || 0;
+    quaternion.z = quaternion.z || quaternion._z || 0;
     mesh.quaternion.copy(quaternion);
   }
 }
@@ -67,14 +81,9 @@ const volumeOf = function volumeOf(size) {
 }
 
 module.exports = {
-  grassFloor: function(size, position, quaternion) { // {width, height, depth}, {x, y, z}, {w, x, y, z}
-    const grass = new THREE.TextureLoader().load( 'textures/grass-repeating4.jpg' );
-    grass.wrapS = THREE.RepeatWrapping;
-    grass.wrapT = THREE.RepeatWrapping;
-    grass.repeat.set( 40, 40 );
-    const geometry = BoxGeometry(size);
-    const material = new THREE.MeshLambertMaterial({ map: grass });
-    const mesh = new THREE.Mesh(geometry, material);
+  grassFloor: function(size, position, quaternion) { // {width, depth, segments}, {x, y, z}, {w, x, y, z}
+    const geometry = BoxGeometry( size );
+    const mesh = new THREE.Mesh(geometry, floorMaterial);
     addShadow(mesh);
     initPosition(mesh, position, quaternion);
     mesh.userData.name = 'grassFloor'
@@ -86,7 +95,7 @@ module.exports = {
     addShadow(mesh);
     initPosition(mesh, position, quaternion);
     mesh.userData.name = 'metalCrate';
-    mesh.userData.mass = volumeOf(size);
+    mesh.userData.mass = volumeOf(size) * 10;
     return mesh;
   },
   questionCrate: function(size, position, quaternion) {
@@ -94,7 +103,7 @@ module.exports = {
     addShadow(mesh);
     initPosition(mesh, position, quaternion);
     mesh.userData.name = 'questionCrate';
-    mesh.userData.mass = volumeOf(size);
+    mesh.userData.mass = volumeOf(size) * 1;
     return mesh;
   },
   woodCrate: function(size, position, quaternion) {
@@ -102,7 +111,7 @@ module.exports = {
     addShadow(mesh);
     initPosition(mesh, position, quaternion);
     mesh.userData.name = 'woodCrate';
-    mesh.userData.mass = volumeOf(size);
+    mesh.userData.mass = volumeOf(size) * 5;
     return mesh;
   },
   ancientCrate: function(size, position, quaternion) {
@@ -110,7 +119,7 @@ module.exports = {
     addShadow(mesh);
     initPosition(mesh, position, quaternion);
     mesh.userData.name = 'ancientCrate';
-    mesh.userData.mass = volumeOf(size);
+    mesh.userData.mass = volumeOf(size) * 100;
     return mesh;
   },
   playerModel: function(position, quaternion) {
@@ -132,73 +141,57 @@ module.exports = {
   },
   sky: function() {
     return sky;
+  },
+  sidePanel: function(size, position, quaternion) {
+    let yquat = new THREE.Quaternion();
+    yquat.setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI / 6);
+    // let zquat = new THREE.Quaternion();
+    // zquat.setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI / 4);
+    // let quat = yquat.multiply(zquat);
+    console.log(yquat)
+    let mesh = new THREE.Mesh(BoxGeometry(size), sidePanelMaterial);
+    initPosition(mesh, position);
+    mesh.userData.name = 'sidePanel';
+    mesh.rotation.x = - Math.PI / 6; //(30degrees)
+    addShadow(mesh);
+    mesh.userData.mass = 0;
+    return mesh;
+  },
+  scoreBoardPole: function(size, position, quaternion) {
+    const material = new THREE.MeshLambertMaterial({ color: new THREE.Color( 0x0e1c33 )  });
+    const cylinder = new THREE.CylinderGeometry(.1, .1, 12, 10, 10, false);
+    let mesh = new THREE.Mesh(cylinder, material);
+    addShadow(mesh);
+    initPosition(mesh, position, quaternion);
+    mesh.userData.name = 'scoreBoardPole';
+    mesh.userData.mass = 0;
+    return mesh;
+  },
+  scoreBoard: function(size, position, quaternion) {
+    let mesh = new THREE.Mesh(BoxGeometry(size), scoreBoardMaterial);
+    initPosition(mesh, position, quaternion);
+    mesh.userData.name = 'scoreBoard';
+    addShadow(mesh);
+    mesh.userData.mass = 0;
+    return mesh;
+  },
+  text: function(cb, fontPath, text, color, size, position, quaternion) {
+    const quat = new THREE.Quaternion();
+    quat.setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI / 2);
+    let loader = new THREE.FontLoader();
+    loader.load( fontPath, function(font) {
+      size.font = font;
+      const geometry = new THREE.TextGeometry(text, size);
+      const material = new THREE.MeshPhongMaterial({ color: color,  transparent: true, opacity: 1  });
+      let mesh = new THREE.Mesh(geometry, material);
+      initPosition(mesh, position, quat);
+      mesh.userData.name = 'text';
+      addShadow(mesh);
+      mesh.userData.mass = 0;
+      cb(mesh);
+    });
   }
 }
-
-// //Side Panel +z
-// let futureTile = new THREE.TextureLoader().load( 'textures/futuretile.jpg' );
-// futureTile.wrapS = THREE.RepeatWrapping;
-// futureTile.wrapT = THREE.RepeatWrapping;
-// futureTile.repeat.set( 15, 2.5/3 );
-// geometry = new THREE.BoxGeometry(45, 0.1, 2.5);
-// material = new THREE.MeshLambertMaterial({ map: futureTile,  transparent: true, opacity: .5  });
-// mesh = new THREE.Mesh(geometry, material);
-// mesh.position.y = 0.5;
-// mesh.position.x = 0;
-// mesh.position.z = 23.5;
-// mesh.receiveShadow = true;
-// mesh.rotation.x = - Math.PI / 6;
-// scene.add(mesh);
-
-// //Side Panel -z
-// futureTile = new THREE.TextureLoader().load( 'textures/futuretile.jpg' );
-// futureTile.wrapS = THREE.RepeatWrapping;
-// futureTile.wrapT = THREE.RepeatWrapping;
-// futureTile.repeat.set( 15, 2.5/3 );
-// geometry = new THREE.BoxGeometry(45, 0.1, 2.5);
-// material = new THREE.MeshPhongMaterial({ map: futureTile,  transparent: true, opacity: .5 });
-// mesh = new THREE.Mesh(geometry, material);
-// mesh.position.y = 0.5;
-// mesh.position.x = 0;
-// mesh.position.z = -23.5;
-// mesh.receiveShadow = true;
-// mesh.rotation.x = Math.PI / 6;
-// scene.add(mesh);
-
-// //Score Board
-// let openEnded = false;
-// let height = 10;
-// geometry = new THREE.CylinderGeometry(.1, .1, height, 10, 10, openEnded);
-// material = new THREE.MeshLambertMaterial({ color: new THREE.Color( 0x0e1c33 )  });
-// mesh = new THREE.Mesh(geometry, material);
-// mesh.position.x = -22.5;
-// mesh.position.z = -2;
-// mesh.position.y = height/2 - .2;
-// scene.add(mesh);
-
-// openEnded = false;
-// height = 10;
-// geometry = new THREE.CylinderGeometry(.1, .1, height, 10, 10, openEnded);
-// material = new THREE.MeshLambertMaterial({ color: new THREE.Color( 0x0e1c33 )  });
-// mesh = new THREE.Mesh(geometry, material);
-// mesh.position.x = -22.5;
-// mesh.position.z = 2;
-// mesh.position.y = height/2 - .2;
-// scene.add(mesh);
-
-// futureTile = new THREE.TextureLoader().load( 'textures/scoreboard.png' );
-// // futureTile.wrapS = THREE.RepeatWrapping;
-// // futureTile.wrapT = THREE.RepeatWrapping;
-// // futureTile.repeat.set( 9/4 , 1 );
-// geometry = new THREE.BoxGeometry(9, 0.1, 4);
-// material = new THREE.MeshPhongMaterial({ map: futureTile,  transparent: true, opacity: 1 });
-// mesh = new THREE.Mesh(geometry, material);
-// mesh.position.y = 7.5;
-// mesh.position.x = -22.3;
-// mesh.receiveShadow = true;
-// mesh.rotation.x = - Math.PI / 2;
-// mesh.rotation.z = Math.PI / 2;
-// scene.add(mesh);
 
 // var loader = new THREE.FontLoader();
 // let font = loader.load( 'Arial_Regular.json', function(font) {
@@ -229,3 +222,19 @@ module.exports = {
 //   mesh.rotation.y = Math.PI / 2;
 //   scene.add(mesh);
 // });
+
+
+// futureTile = new THREE.TextureLoader().load( 'textures/scoreboard.png' );
+// // futureTile.wrapS = THREE.RepeatWrapping;
+// // futureTile.wrapT = THREE.RepeatWrapping;
+// // futureTile.repeat.set( 9/4 , 1 );
+// geometry = new THREE.BoxGeometry(9, 0.1, 4);
+// material = new THREE.MeshPhongMaterial({ map: futureTile,  transparent: true, opacity: 1 });
+// mesh = new THREE.Mesh(geometry, material);
+// mesh.position.y = 7.5;
+// mesh.position.x = -22.3;
+// mesh.receiveShadow = true;
+// mesh.rotation.x = - Math.PI / 2;
+// mesh.rotation.z = Math.PI / 2;
+// scene.add(mesh);
+

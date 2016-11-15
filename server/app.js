@@ -7,6 +7,10 @@ const morgan = require('morgan'); // middleware for logging request details
 const bodyParser = require('body-parser'); // middleware supports unicode encoding of the body
 const compression = require('compression'); // middleware for gzip compression
 const matchController = require('./controllers/matchController.js');
+const userController = require('./db/controllers/UserController');
+const gameController = require('./db/controllers/GameController');
+const scoreController = require('./db/controllers/ScoreController');
+const requestHandler = require('./leaderBoard/requestHandler').router;
 
 const allowCrossDomain = (req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
@@ -19,12 +23,17 @@ app.use(bodyParser.json());
 app.use(morgan('dev'));
 app.use(allowCrossDomain);
 app.use(compression());
+app.use('/api', requestHandler);
 
 app.use(express.static(path.join(__dirname, './../client')));
 
 server.listen(process.env.PORT || 9999, () => {
   console.log(`listening on port ${process.env.PORT || 9999}`);
 });
+// userController.insertUser();
+// gameController.insertGame();
+// scoreController.insertScore();
+scoreController.clear();
 
 io.on('connection', (socket) => {
 

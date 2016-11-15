@@ -1,7 +1,7 @@
 {
   "name": "fraggle-rock",
   "version": "1.0.0",
-  "description": "3D Shooter came (Tactical)",
+  "description": "3D Shooter Game (Tactical)",
   "main": "index.js",
   "scripts": {
     "build": "webpack --progress --colors --watch",
@@ -9,7 +9,7 @@
     "start-dev": "nodemon ./server/app.js",
     "test": "npm run test:server",
     "test:server": "ls"
-},
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/riyazgithub/fraggle-rock.git"
@@ -30,7 +30,9 @@
     "express": "^4.14.0",
     "morgan": "^1.7.0",
     "node-static": "*",
+    "pg": "^6.1.0",
     "react": "*",
+    "sequelize": "^3.25.0",
     "socket.io": "^1.5.1",
     "three": "^0.82.1",
     "webpack": "^1.12.9"

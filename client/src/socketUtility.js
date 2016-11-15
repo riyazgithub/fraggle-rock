@@ -38,9 +38,13 @@ const roundQuaternion = function roundQuaternion (quaternion, decimals) {
 
 
 module.exports = {
-  requestNewMatch: function requestNewMatch(scene) {
+  requestNewMatch: function requestNewMatch(game) {
     socket = socket || io();
-    socket.emit('fullScene', scene.toJSON());
+    const camera = game.camera.toJSON();
+    camera.position = game.camera.position;
+    camera.direction = game.camera.getWorldDirection();
+    const fullScene = {camera: camera, scene: game.scene.toJSON()};
+    socket.emit('fullScene', fullScene);
     addPhysicsUpdateListener(socket);
   },
   joinMatch: function joinMatch(matchNumber) {
@@ -48,12 +52,13 @@ module.exports = {
     socket.emit('addMeToMatch', matchNumber);
     addPhysicsUpdateListener(socket);
   },
-  emitClientPosition: function emitClientPositon(camera) {
-    const clientPosition = {};
-    clientPosition.position = roundPosition(camera.position);
-    clientPosition.quaternion = roundQuaternion(camera.quaternion);
-    clientPosition.uuid = camera.uuid;
-    socket.emit('clientUpdate', JSON.stringify(clientPosition));
+  emitClientPosition: function emitClientPositon(camera, playerInput) {
+    // const clientPosition = {};
+    // clientPosition.position = roundPosition(camera.position);
+    // clientPosition.quaternion = roundQuaternion(camera.quaternion);
+    // clientPosition.uuid = camera.uuid;
+    playerInput.direction = camera.getWorldDirection();
+    socket.emit('clientUpdate', JSON.stringify(playerInput));
   },
   emitShootBall: function emitShootBall(camera) {
     socket.emit('shootBall', camera);

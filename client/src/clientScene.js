@@ -28,20 +28,20 @@ const join = function join() {
   return { camera, renderer, scene };
 }
 
-const startUpdateTick = function startUpdateTick(camera) {
+const startUpdateTick = function startUpdateTick(camera, playerInput) {
   serverUpdateTick = setInterval(() => {
-    socketUtility.emitClientPosition(camera);
+    socketUtility.emitClientPosition(camera, playerInput);
   }, serverUpdateInterval);
 };
 
 const startGame = function startGame() {
   const game = init(); //creates camera, renderer and scene data
   sceneUtility.addLookControls(game.camera);
-  sceneUtility.addMoveControls(game.camera);
+  const playerInput = sceneUtility.addMoveControls(game.camera);
   sceneUtility.addClickControls(socketUtility);
   sceneUtility.animate(game); //Renders screen to page and requests re-render at next animation frame
-  socketUtility.requestNewMatch(game.scene); //Request to the server to create a new match
-  startUpdateTick(game.camera); //This starts an interval to emit player position to server on timer
+  socketUtility.requestNewMatch(game); //Request to the server to create a new match
+  startUpdateTick(game.camera, playerInput); //This starts an interval to emit player position to server on timer
 };
 
 const joinGame = function joinGame(matchNumber) {

@@ -15,11 +15,11 @@ const buildLevelOne = function buildLevelOne() {
   scene.add(mesh);
 
   //Side Panels
-  mesh = objectBuilder.sidePanel({width: 1, height: 5, depth: 80}, {x: 0, y: .5, z: -42},
+  mesh = objectBuilder.sidePanel({width: 1, height: 2.5, depth: 40}, {x: 0, y: .5, z: -42},
     {x: 0, y: 0, z: 0, w: 0 });
   scene.add(mesh);
 
-  mesh = objectBuilder.sidePanel({width: 1, height: 5, depth: 80}, {x: 0, y: .5, z: 42},
+  mesh = objectBuilder.sidePanel({width: 1, height: 2.5, depth: 40}, {x: 0, y: .5, z: 42},
     {x: 0, y: 0, z: 0, w: 0 });
   scene.add(mesh);
 
@@ -33,7 +33,20 @@ const buildLevelOne = function buildLevelOne() {
   mesh = objectBuilder.scoreBoard({width: 1, height: 4, depth: 9}, {x: -44.3, y: 7.5, z: 0});
   scene.add(mesh);
 
-  mesh = objectBuilder.text(asynchAddMesh, 'Arial_Regular.json', 'Eric', 'blue', {size: 1.3, height: .06, curveSegments: 3}, {x: -44.3, y: 6.3, z: 2.9});
+  mesh = objectBuilder.text(asynchAddMesh, 'Arial_Regular.json', 'Score', 'blue', {size: 1.3, height: .06, curveSegments: 3}, {x: -43.7, y: 6.3, z: 2.9});
+
+  //FLOOR BUILDER
+  let floorBlocks = [];
+  let z = 40;
+  for (let a = 0; a < 1600; a+=4) {
+    let x = a % 80;
+    if (x === 0) {
+      z += 4;
+    }
+    mesh = objectBuilder.grassFloor({width:4, height: 4, depth: 4},
+      {x: x, y: 0, z: z});
+    scene.add(mesh);
+  }
 
 
 

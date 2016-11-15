@@ -7,19 +7,33 @@ const LoadTexture = function LoadTexture(texturePath) {
 const MeshLambertMaterial = function MeshLambertMaterial(texturePath) {
   return new THREE.MeshLambertMaterial({map: LoadTexture(texturePath)})
 };
-const RedBall = function RedBall() {
-  const redBall = new THREE.TextureLoader().load( 'textures/redball2.jpg' );
-  redBall.wrapS = THREE.RepeatWrapping;
-  redBall.wrapT = THREE.RepeatWrapping;
-  redBall.repeat.set( 1, 1 );
-  return redBall;
+
+const futureTile = function(xTile, zTile) {
+  let texture = new THREE.TextureLoader().load( 'textures/futuretile.jpg' );
+  texture.wrapS = THREE.RepeatWrapping;
+  texture.wrapT = THREE.RepeatWrapping;
+  texture.repeat.set(xTile, zTile);
+  return texture;
 }
-const redBallMaterial = new THREE.MeshLambertMaterial( {map: RedBall()} );
+
+const grass = function(xTile, zTile) {
+  const grass = new THREE.TextureLoader().load( 'textures/grass-repeating4.jpg' );
+  grass.wrapS = THREE.RepeatWrapping;
+  grass.wrapT = THREE.RepeatWrapping;
+  grass.repeat.set( xTile, zTile );
+  return grass;
+}
+
+const redBallMaterial = new THREE.MeshLambertMaterial(
+  {map: new THREE.TextureLoader().load( 'textures/redball2.jpg' )} );
 const playerMaterial = new THREE.MeshLambertMaterial({ color: 'green' });
 const metalCrateMaterial = MeshLambertMaterial('textures/metalcratesm.jpg');
 const questionCrateMaterial = MeshLambertMaterial('textures/questioncrate.jpg');
 const woodCrateMaterial = MeshLambertMaterial('textures/woodcratesm.jpg');
 const ancientCrateMaterial = MeshLambertMaterial('textures/ancientcrate.jpg');
+const scoreBoardMaterial = new THREE.MeshPhongMaterial({ map: futureTile(9/4, 1), transparent: true, opacity: .8  });
+const sidePanelMaterial = new THREE.MeshPhongMaterial({ map: futureTile(15, 5/6), transparent: true, opacity: .8  });
+const floorMaterial = new THREE.MeshLambertMaterial({ map: grass(1, 1) });
 
 const sky = (() => {
   let sky = {};
@@ -68,13 +82,8 @@ const volumeOf = function volumeOf(size) {
 
 module.exports = {
   grassFloor: function(size, position, quaternion) { // {width, depth, segments}, {x, y, z}, {w, x, y, z}
-    const grass = new THREE.TextureLoader().load( 'textures/grass-repeating4.jpg' );
-    grass.wrapS = THREE.RepeatWrapping;
-    grass.wrapT = THREE.RepeatWrapping;
-    grass.repeat.set( 40, 40 );
     const geometry = BoxGeometry( size );
-    const material = new THREE.MeshLambertMaterial({ map: grass });
-    const mesh = new THREE.Mesh(geometry, material);
+    const mesh = new THREE.Mesh(geometry, floorMaterial);
     addShadow(mesh);
     initPosition(mesh, position, quaternion);
     mesh.userData.name = 'grassFloor'
@@ -140,12 +149,7 @@ module.exports = {
     // zquat.setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI / 4);
     // let quat = yquat.multiply(zquat);
     console.log(yquat)
-    let texture = new THREE.TextureLoader().load( 'textures/futuretile.jpg' );
-    texture.wrapS = THREE.RepeatWrapping;
-    texture.wrapT = THREE.RepeatWrapping;
-    texture.repeat.set( 15, 2.5/3 );
-    let material = new THREE.MeshLambertMaterial({});
-    let mesh = new THREE.Mesh(BoxGeometry(size), material);
+    let mesh = new THREE.Mesh(BoxGeometry(size), sidePanelMaterial);
     initPosition(mesh, position);
     mesh.userData.name = 'sidePanel';
     mesh.rotation.x = - Math.PI / 6; //(30degrees)
@@ -161,16 +165,10 @@ module.exports = {
     initPosition(mesh, position, quaternion);
     mesh.userData.name = 'scoreBoardPole';
     mesh.userData.mass = 0;
-    mesh.rotation.x = - Math.PI / 6; //(30degrees)
     return mesh;
   },
   scoreBoard: function(size, position, quaternion) {
-    let texture = new THREE.TextureLoader().load( 'textures/futuretile.jpg' );
-    texture.wrapS = THREE.RepeatWrapping;
-    texture.wrapT = THREE.RepeatWrapping;
-    texture.repeat.set( 9/4 , 1 );
-    let material = new THREE.MeshPhongMaterial({ map: texture, transparent: true, opacity: .8  });
-    let mesh = new THREE.Mesh(BoxGeometry(size), material);
+    let mesh = new THREE.Mesh(BoxGeometry(size), scoreBoardMaterial);
     initPosition(mesh, position, quaternion);
     mesh.userData.name = 'scoreBoard';
     addShadow(mesh);

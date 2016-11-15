@@ -25,6 +25,7 @@ module.exports = function Match(deleteMatch) {
   this.physicsEmitTick = 1/60*1000; //period between physics emits
   this.physicsClock;
   this.physicsTick = 1/100*1000;
+  this.killFloor = killFloor.bind(this);
   this.connected = true;
   kill = function() {deleteMatch(this.guid)}.bind(this);
   this.timeoutDelay = 10000;
@@ -266,8 +267,18 @@ const loadFullScene = function loadFullScene(scene, player) {
   this.loadNewClient(player);
 };
 
+const killFloor = function killFloor() {
+  let killFloorTick = 2000;
+  // this.killFloorInterval = setInterval(() => {
+  //   // this.world.children.userData.shapeType === 'grassFloor'
+  //   // cannonBody.mass = 100 //then it falls
+  //   //add physics 1 block
+  // }.bind(this), killFloorTick);
+}
+
 const shutdown = function shutdown() {
   clearTimeout(this.timeout);
   clearInterval(this.physicsClock);
   clearInterval(this.physicsEmitClock);
-}
+  clearInterval(this.killFloorInterval);
+};

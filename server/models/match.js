@@ -68,8 +68,28 @@ const startPhysics = function startPhysics(io) {
         clientBody.velocity.set(currVelocity.x + movePerTick * client.direction.z, currVelocity.y, currVelocity.z - movePerTick * client.direction.x);
       }
       if (client.jump) {
-        clientBody.velocity.set(currVelocity.x, currVelocity.y + 50, currVelocity.z);
-        client.jump = false;  
+        if (client.jumps > 0) {
+          clientBody.velocity.set(currVelocity.x, currVelocity.y + 50, currVelocity.z);
+          client.jumps --;
+        }
+        const regen = function regen() {
+          if (this.jumps < 3) {
+            this.jumps++;
+          }
+          console.log(this.jumps);
+          if (this.jumps < 3) {
+            setTimeout(regen.bind(this), 3000)
+          } else {
+            this.jumpRegen = false;
+          }
+        }.bind(client);
+        if (!client.jumpRegen && client.jumps < 3) {
+          client.jumpRegen = true;
+          setTimeout(function() {
+            regen();
+          }, 3000)
+        }
+        client.jump = false; 
       }
     }
     context.world.step(context.physicsTick/1000);
@@ -175,7 +195,7 @@ const loadNewClient = function loadNewClient(player) {
   ballBody.position.z = z;
   ballBody.addShape(ballShape);
   this.clientToCannon[player.object.uuid] = ballBody;
-  this.clients[player.object.uuid] = {uuid: player.object.uuid, position: ballBody.position, direction: player.direction, up: false, left: false, right: false, down: false};
+  this.clients[player.object.uuid] = {uuid: player.object.uuid, position: ballBody.position, direction: player.direction, up: false, left: false, right: false, down: false, jumps: 3};
   this.world.add(ballBody);
 };
 

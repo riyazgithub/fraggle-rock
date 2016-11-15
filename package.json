@@ -9,7 +9,7 @@
     "start-dev": "nodemon ./server/app.js",
     "test": "npm run test:server",
     "test:server": "ls"
-},
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/riyazgithub/fraggle-rock.git"
@@ -30,7 +30,9 @@
     "express": "^4.14.0",
     "morgan": "^1.7.0",
     "node-static": "*",
-    "react": "*",
+    "react": "^15.3.2",
+    "react-dom": "^15.3.2",
+    "react-facebook-login": "^3.4.0",
     "socket.io": "^1.5.1",
     "three": "^0.82.1",
     "webpack": "^1.12.9"

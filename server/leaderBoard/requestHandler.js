@@ -1,6 +1,7 @@
 const express = require('express');
 const UserController = require('./../db/controllers/UserController');
 const GameController = require('./../db/controllers/GameController');
+const underscore = require('underscore');
 
 const router = express.Router();
 
@@ -21,14 +22,19 @@ router.route('/getUser/:name')
 router.route('/addGame')
 .post((req, res) => {
   // search User and then add gameMode
-  //TODO: Rewrite this to add promises
-  const user = UserController.searchUserByUsername(req.body.username);
-  if (user) {
-    const game = { uuid: req.body.uuid, user_id: user.id };
-    GameController.insertGame(game);
-    res.sendStatus(201);
+  if (req.body.username) {
+    UserController.searchUserByUsername(req.body.username)
+    .then((user) => {
+      const game = { uuid: req.body.uuid, user_id: user.id };
+      GameController.insertGame(game);
+      res.sendStatus(201);
+    })
+    .catch((error) => {
+      console.log('Error while adding a game ', error);
+      res.sendStatus(400);
+    });
   } else {
-    res.sendStatus(400);
+    res.status(400).send('Username is required field !!');
   }
 });
 
@@ -37,22 +43,15 @@ router.route('/getGames')
   const gameDetails = [];
   GameController.getAllGames()
   .then((games) => {
-    games.forEach((game) => {
-      const tmpObj = game;
-      if (game.user_id) {
-        UserController.searchUserById(game.user_id)
-        .then((user) => {
-          tmpObj.username = user.username;
-          console.log('Tmp obj ', tmpObj.username, user.username);
-          gameDetails.push(tmpObj);
-          res.status(200).send(gameDetails);
-        })
-        .catch((error) => {
-          console.log('Get Games Error ', error);
-          res.sendStatus(400);
-        });
+    for (let i = 0; i < games.length; i++) {
+      if (games[i].user_id) {
+        gameDetails.push(games[i]);
       }
-    });
+    }
+    res.status(200).send(gameDetails);
+  })
+  .finally(() => {
+    console.log('Game Details sent ', gameDetails);
   });
 });
 module.exports.router = router;

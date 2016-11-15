@@ -3,6 +3,11 @@ const Sequelize = require('sequelize');
 const userModel = require('./UserModel')
 
 const Game = db.define('Game', {
+  id: {
+    type: Sequelize.INTEGER,
+    autoIncrement: true,
+    primaryKey: true,
+  },
   uuid: {
     type: Sequelize.STRING,
     primaryKey: true,

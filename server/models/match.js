@@ -54,7 +54,7 @@ const startPhysics = function startPhysics(io) {
       const client = context.clients[key];
       const clientBody = context.clientToCannon[client.uuid];
       const currVelocity = clientBody.velocity;
-      const movePerTick = 1.5;
+      const movePerTick = .75;
       if (client.up) {
         clientBody.velocity.set(currVelocity.x + movePerTick * client.direction.x, currVelocity.y, currVelocity.z + movePerTick * client.direction.z);
       } 

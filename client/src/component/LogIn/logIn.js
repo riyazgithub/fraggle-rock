@@ -18,8 +18,8 @@ class LogIn extends React.Component {
     this.setState({ user: true })
       console.log(e)
       if(e.name) {
-        document.getElementById('LogIn').style.visibility = 'hidden'; 
-        document.getElementById('Home').style.visibility = 'visible';
+        document.getElementById('LogIn').style.display = 'none'; 
+        document.getElementById('Home').style.display = 'block';
         
       }
     

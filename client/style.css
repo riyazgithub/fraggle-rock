@@ -70,6 +70,11 @@
 
 }
 
+#GuestLogIn {
+  margin-top: 20%;
+  margin-left: 6px;
+}
+
 #LogInPageLogo {
   position: absolute;
   z-index:-1;
@@ -113,6 +118,11 @@
 	margin-right: 5px;
 }
 
-#LeaderBoard {
+#LeaderBoardButton {
   margin-top: 5px;
 }
+
+#LeaderBoard {
+  display: none;
+}
+

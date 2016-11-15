@@ -11,12 +11,15 @@ class LogIn extends React.Component {
     this.responseFacebook = this.responseFacebook.bind(this)
   }
   componentClicked(e) {
-  	console.log(e)
+  }
+  
+  playAsGuest() {
+    document.getElementById('LogIn').style.display = 'none'; 
+    document.getElementById('Home').style.display = 'block';
   }
 
   responseFacebook(e) {
     this.setState({ user: true })
-      console.log(e)
       if(e.name) {
         document.getElementById('LogIn').style.display = 'none'; 
         document.getElementById('Home').style.display = 'block';
@@ -37,6 +40,7 @@ class LogIn extends React.Component {
                 onClick={this.componentClicked}
                 callback={this.responseFacebook}
             />
+            <button onClick={this.playAsGuest} id='GuestLogIn'>Play As Guest</button>
           </div>
           <img id='LogInPageLogo' src="../../../textures/LogInPageLogo.jpg" />
         </div>

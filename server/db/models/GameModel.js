@@ -14,6 +14,7 @@ const Game = db.define('Game', {
   },
   uuid: {
     type: Sequelize.STRING,
+    unique: true,
   },
 });
 Game.belongsTo(userModel, { foreignKey: 'user_id' });

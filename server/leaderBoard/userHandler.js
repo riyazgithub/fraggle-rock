@@ -8,6 +8,7 @@ router.route('/addUser')
   UserController.insertUser(req.body);
   res.sendStatus(201);
 });
+
 router.route('/getUsers')
 .get((req, res) => {
   UserController.getAllUsers()
@@ -15,12 +16,29 @@ router.route('/getUsers')
     res.status(200).send(users);
   });
 });
-router.route('/getUser/:name')
+
+router.route('/getUserByName/:name')
 .get((req, res) => {
-  UserController.searchUser(req.params.name)
-  .then((user) => {
-    res.status(200).send(user);
-  });
+  if (req.params.name) {
+    UserController.searchUser(req.params.name)
+    .then((user) => {
+      res.status(200).send(user);
+    });
+  } else {
+    res.sendStatus(400);
+  }
+});
+
+router.route('/getUserByFacebookID/:facebookid')
+.get((req, res) => {
+  if (req.params.facebookid) {
+    UserController.searchUserByFacebookid(req.params.facebookid)
+    .then((user) => {
+      res.status(200).send(user);
+    });
+  } else {
+    res.sendStatus(400);
+  }
 });
 
 module.exports = router;

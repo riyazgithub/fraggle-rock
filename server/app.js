@@ -35,7 +35,7 @@ server.listen(process.env.PORT || 9999, () => {
 // userController.insertUser();
 // gameController.insertGame();
 // scoreController.insertScore();
-scoreController.clear();
+//scoreController.clear();
 
 io.on('connection', (socket) => {
 

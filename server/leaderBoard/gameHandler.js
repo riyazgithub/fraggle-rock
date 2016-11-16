@@ -15,7 +15,7 @@ router.route('/addGame')
       res.sendStatus(201);
     })
     .catch((error) => {
-      console.log('Error while adding a game ', error);
+      console.error('Error while adding a game ', error);
       res.sendStatus(400);
     });
   } else {
@@ -34,9 +34,6 @@ router.route('/getGames')
       }
     }
     res.status(200).send(gameDetails);
-  })
-  .finally(() => {
-    console.log('Game Details sent ', gameDetails);
   });
 });
 

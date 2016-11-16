@@ -25,6 +25,9 @@ module.exports = {
   searchUserById(id) {
     return userModel.find({ where: { id } });
   },
+  searchUserByFacebookid(facebookid) {
+    return userModel.find({ where: { facebookid } });
+  },
   clear() {
     userModel.destroy({
       where: {

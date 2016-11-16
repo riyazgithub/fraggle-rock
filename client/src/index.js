@@ -1,12 +1,5 @@
-const clientScene = require('./clientScene.js');
-// var loaderScene = require('test.js');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import LogIn from './component/LogIn/logIn.js';
 
-document.querySelector('#joinMatch').addEventListener('click', function() {
-  clientScene.startGame();
-  document.querySelector('#testButtons').remove();
-});
-
-document.querySelector('#joinExisting').addEventListener('click', function() {
-  clientScene.joinGame(0);
-  document.querySelector('#testButtons').remove();
-});
+ReactDOM.render(<LogIn />, document.getElementById('app'));
